@@ -22,6 +22,7 @@ private:
 	unsigned int shineDamperLocation;
 	unsigned int reflectLocation;
 	unsigned int useFakeLighting;
+	unsigned int skyColorLocation;
 
 	unsigned int loadShader(int type, const char* Path) {
 		std::string Code;
@@ -113,6 +114,11 @@ public:
 		shineDamperLocation = getUniformLocation("shineDamper");
 		reflectLocation = getUniformLocation("reflectivity");
 		useFakeLighting = getUniformLocation("useFakeLighting");
+		skyColorLocation = getUniformLocation("skyColor");
+	}
+
+	void loadSkyColor(float r, float g, float b){
+		loadVector(skyColorLocation, vec3(r,g,b));
 	}
 
 	void loadFakeLightingVariable(int useFake){

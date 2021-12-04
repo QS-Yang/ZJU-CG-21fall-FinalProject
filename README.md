@@ -5,3 +5,6 @@ Final Project of ZJU Computer Graphic (by Wu Hongzhi)
 
 2021.12.3 update
 完成transparency，需要调light颜色
+
+2021.12.4
+实现雾

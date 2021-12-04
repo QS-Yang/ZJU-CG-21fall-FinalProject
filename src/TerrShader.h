@@ -21,6 +21,7 @@ private:
 	unsigned int lightColorLocation;
 	unsigned int shineDamperLocation;
 	unsigned int reflectLocation;
+	unsigned int skyColorLocation;
 
 	unsigned int loadShader(int type, const char* Path) {
 		std::string Code;
@@ -113,6 +114,11 @@ public:
 		lightColorLocation = getUniformLocation("lightColor");
 		shineDamperLocation = getUniformLocation("shineDamper");
 		reflectLocation = getUniformLocation("reflectivity");
+		skyColorLocation = getUniformLocation("skyColor");
+	}
+
+	void loadSkyColor(float r, float g, float b){
+		loadVector(skyColorLocation, vec3(r,g,b));
 	}
 
 	unsigned int getUniformLocation(std::string uniformName) {

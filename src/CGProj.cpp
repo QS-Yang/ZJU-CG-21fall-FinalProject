@@ -51,8 +51,8 @@ int main()
     //Render
     Loader loader;
 
-    vector<string> filenames{"object/grassModel.obj"};
-    Texture rawtexture=Texture(loader.loadTexture("texture/grassTexture.png"));
+    vector<string> filenames{"../object/Car2.obj"};
+    Texture rawtexture=Texture(loader.loadTexture("../texture/grass.png"));
 
     vector<Entity> entities;
 
@@ -60,8 +60,8 @@ int main()
         ObjLoader Loader = ObjLoader(filenames[i], loader);
         Model model = Loader.Draw();
         TexturedModel texturedmodel=TexturedModel(model, rawtexture);
-        texturedmodel.texture.setHasTransparency(1);
-        texturedmodel.texture.setUseFakeLighting(1);
+        texturedmodel.texture.setHasTransparency(0);
+        texturedmodel.texture.setUseFakeLighting(0);
         Texture texture = texturedmodel.texture;
         texture.shineDamper = 10;
         texture.reflectivity = 1;
@@ -70,8 +70,8 @@ int main()
 
     Light light = Light(glm::vec3(0,0,-20), glm::vec3(1,1,1));
 
-    Terrain terrain1(0, 0, loader, Texture(loader.loadTexture("texture/grass.png")));
-    Terrain terrain2(1, 0, loader, Texture(loader.loadTexture("texture/grass.png")));
+    Terrain terrain1(0, 0, loader, Texture(loader.loadTexture("../texture/grass.png")));
+    Terrain terrain2(1, 0, loader, Texture(loader.loadTexture("../texture/grass.png")));
     Camera camera(window);
 
     // render loop

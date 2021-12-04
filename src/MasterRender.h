@@ -17,13 +17,16 @@ public:
     float FOV = 70.0;
     float nearPlane = 0.1;
     float farPlane = 1000;
+    float RED = 0.5;
+    float GREEN = 0.5;
+    float BLUE = 0.5;
     
-    ShaderProgram shader= ShaderProgram("Shader.vs", "Shader.fs");
+    ShaderProgram shader= ShaderProgram("../Shader.vs", "../Shader.fs");
     //EntityRender renderer = EntityRender(shader);
     EntityRender renderer;
 
     TerrainRender terrainRender;
-    TerrainShader terrainShader = TerrainShader("TShader.vs", "TShader.fs");
+    TerrainShader terrainShader = TerrainShader("../TShader.vs", "../TShader.fs");
 
     std::map<TexturedModel, std::vector<Entity>> entities;
     std::vector<Terrain> terrains;
@@ -39,12 +42,14 @@ public:
     void render(Light sun, Camera camera){
         Prepare();
         shader.Start();
+        shader.loadSkyColor(RED, GREEN, BLUE);
         shader.loadLight(sun);
         shader.loadViewMatrix(camera);
         renderer.newRender(entities);
         shader.Stop();
 
         terrainShader.Start();
+        terrainShader.loadSkyColor(RED, GREEN, BLUE);
         terrainShader.loadLight(sun);
         terrainShader.loadViewMatrix(camera);
         terrainRender.render(terrains);
@@ -69,7 +74,7 @@ public:
 
     void Prepare() {
         glEnable(GL_DEPTH_TEST);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(RED, GREEN, BLUE, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //glClear(GL_COLOR_BUFFER_BIT);
     }

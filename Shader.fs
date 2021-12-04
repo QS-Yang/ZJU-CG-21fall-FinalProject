@@ -4,6 +4,7 @@ in vec2 pTexCoord;
 in vec3 surNormal;
 in vec3 toLightVector;
 in vec3 toCameraVector;
+in float visibility;
 
 out vec4 FragColor;
 
@@ -11,6 +12,7 @@ uniform sampler2D textureSampler;
 uniform vec3 lightColor;
 uniform float shineDamper;
 uniform float reflectivity;
+uniform vec3 skyColor;
 
 void main()
 {
@@ -26,15 +28,16 @@ void main()
 	vec3 reflectDir = reflect(lightDir, unitNormal);
 
 	float specFactor = dot(reflectDir, unitVectorToCamera);
-	specFactor = max(specFactor, 0.0);
+	specFactor = max(specFactor, 0);
 	float dampedFactor = pow(specFactor, shineDamper);
 	vec3 finalSpec = dampedFactor * reflectivity *lightColor; 
 
 	vec4 TexColor = texture(textureSampler, pTexCoord);
-	if(TexColor.x < 0.5){
-		discard;
-	}
+	// if(TexColor.x<0.5){
+	// 	discard;
+	// }
 
 	FragColor = vec4(diffuse, 1.0) * texture(textureSampler, pTexCoord) + vec4(finalSpec, 1.0);
+	FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);
 	// FragColor = texture(textureSampler, pTexCoord);
 }
