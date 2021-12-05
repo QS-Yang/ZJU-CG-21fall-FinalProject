@@ -1,0 +1,1 @@
+ g++ glad.c stb_image.cpp Model.cpp ObjLoader.cpp CGProj.cpp -o CGProj -lGLEW -lglfw3 -lGL -lX11 -lpthread -lXrandr -lXi -ldl
