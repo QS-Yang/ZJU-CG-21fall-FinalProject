@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "Matrix.h"
 #include "Entity.h"
+#include "Player.h"
 #include "TexturedModel.h"
 #include "Shader.h"
 #include <vector>

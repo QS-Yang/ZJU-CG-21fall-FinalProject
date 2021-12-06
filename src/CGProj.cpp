@@ -22,6 +22,11 @@ void processInput(GLFWwindow* window);
 //窗口设置
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+const unsigned int FPS_CAP = 120;
+
+// timing
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
 
 int main()
 {
@@ -52,16 +57,16 @@ int main()
     //Render
     Loader loader;
     //Load Texture of Terrain
-    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("../texture/grass.png"));
-    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
-    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
-    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("../texture/path.png"));
+    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("texture/grass.png"));
+    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
+    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
+    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("texture/path.png"));
 
     TerrainTexturePack texturePack(backgroundTexture, rTexture, gTexture, bTexture);
-    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("../texture/blendMap.png"));
+    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("texture/blendMap.png"));
     //
-    vector<string> filenames{"../object/Car2.obj"};
-    Texture rawtexture=Texture(loader.loadTexture("../texture/grass.png"));
+    vector<string> filenames{"object/Car2.obj"};
+    Texture rawtexture=Texture(loader.loadTexture("texture/white.png"));
 
     vector<Entity> entities;
 
@@ -83,13 +88,34 @@ int main()
     Terrain terrain2(1, 0, loader, texturePack, blendMap);
     Camera camera(window);
 
+    // Player try
+    ObjLoader PLoader = ObjLoader("object/stanfordBunny.obj", loader);
+    Texture Prawtexture=Texture(loader.loadTexture("texture/mud.png"));
+    Model Pmodel = PLoader.Draw();
+    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
+    Ptexturedmodel.texture.setHasTransparency(0);
+    Ptexturedmodel.texture.setUseFakeLighting(0);
+    Texture Ptexture = Ptexturedmodel.texture;
+    Ptexture.shineDamper = 10;
+    Ptexture.reflectivity = 1;
+    Player player = Player(Ptexturedmodel, glm::vec3(0, 0, -25), 0, 0, 0, 1);
+    player.addWindow(window);
+
     // render loop
     MasterRender renderer = MasterRender();
     while (!glfwWindowShouldClose(window))
     {
+        // per-frame time logic
+        // --------------------
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         processInput(window);
         camera.move();
+        player.move(deltaTime);
 
+        renderer.processEntity(player);
         renderer.processTerrain(terrain1);
         renderer.processTerrain(terrain2);
         for(int i=0;i<entities.size(); i++){
@@ -125,4 +151,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+}
+
+float getCurrentTime() {
+    return glfwGetTime();
 }

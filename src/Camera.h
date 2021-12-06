@@ -1,5 +1,11 @@
 #pragma once
 #include "Entity.h"
+
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <vector>
 #define Step 0.2
 using namespace glm;
 
