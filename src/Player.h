@@ -14,9 +14,9 @@ private:
     float currentTurnSpeed = 0;
     float upwardsSpeed = 0;
 
-    void jump() {
-        this->upwardsSpeed = JUMP_POWER;
-    }
+    // void jump() {
+    //     this->upwardsSpeed = JUMP_POWER;
+    // }
 
     void checkInputs(){
         if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
@@ -35,9 +35,9 @@ private:
             this->currentTurnSpeed = 0;
         }
 
-        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-            jump();
-        }
+        // if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
+        //     jump();
+        // }
 
     }
 
@@ -60,18 +60,18 @@ public:
         float dz = distance * cos(radians(this->ry));
         Up(dx, 0, dz); 
         //std::cout << this->ry << std::endl;   
-        if(this->upwardsSpeed > -JUMP_POWER && this->upwardsSpeed < 0){
-            this->upwardsSpeed -= GRAVITY * delta;
-        }else if(this->upwardsSpeed > 0){
-            this->upwardsSpeed -= GRAVITY * delta;
-        }else{
-            this->upwardsSpeed = 0;
-        }
-        Up(0, this->upwardsSpeed * delta, 0);
-        if(this->ry < TERRAIN_HEIGHT){
-            this->upwardsSpeed = 0;
-            this->ry = TERRAIN_HEIGHT;
-        }
+        // if(this->upwardsSpeed > -JUMP_POWER && this->upwardsSpeed < 0){
+        //     this->upwardsSpeed -= GRAVITY * delta;
+        // }else if(this->upwardsSpeed > 0){
+        //     this->upwardsSpeed -= GRAVITY * delta;
+        // }else{
+        //     this->upwardsSpeed = 0;
+        // }
+        // Up(0, this->upwardsSpeed * delta, 0);
+        // if(this->ry < TERRAIN_HEIGHT){
+        //     this->upwardsSpeed = 0;
+        //     this->ry = TERRAIN_HEIGHT;
+        // }
     }
 
 
