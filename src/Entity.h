@@ -26,8 +26,8 @@ public:
 	}
 
 	void Up(float dx, float dy, float dz) {
-		this->position.x += dx;
-		this->position.y += dy;
-		this->position.z += dz;
+		position.x += dx;
+		position.y += dy;
+		position.z += dz;
 	}
 };

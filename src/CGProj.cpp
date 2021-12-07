@@ -57,16 +57,16 @@ int main()
     //Render
     Loader loader;
     //Load Texture of Terrain
-    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("texture/grass.png"));
-    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("texture/path.png"));
+    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("../texture/grass.png"));
+    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("../texture/path.png"));
 
     TerrainTexturePack texturePack(backgroundTexture, rTexture, gTexture, bTexture);
-    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("texture/blendMap.png"));
+    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("../texture/blendMap.png"));
     //
-    vector<string> filenames{"object/Car2.obj"};
-    Texture rawtexture=Texture(loader.loadTexture("texture/white.png"));
+    vector<string> filenames{"../object/Car2.obj"};
+    Texture rawtexture=Texture(loader.loadTexture("../texture/white.png"));
 
     vector<Entity> entities;
 
@@ -86,11 +86,10 @@ int main()
 
     Terrain terrain1(0, 0, loader, texturePack, blendMap);
     Terrain terrain2(1, 0, loader, texturePack, blendMap);
-    Camera camera(window);
 
     // Player try
-    ObjLoader PLoader = ObjLoader("object/stanfordBunny.obj", loader);
-    Texture Prawtexture=Texture(loader.loadTexture("texture/mud.png"));
+    ObjLoader PLoader = ObjLoader("../object/stanfordBunny.obj", loader);
+    Texture Prawtexture=Texture(loader.loadTexture("../texture/mud.png"));
     Model Pmodel = PLoader.Draw();
     TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
     Ptexturedmodel.texture.setHasTransparency(0);
@@ -100,6 +99,7 @@ int main()
     Ptexture.reflectivity = 1;
     Player player = Player(Ptexturedmodel, glm::vec3(0, 0, -25), 0, 0, 0, 1);
     player.addWindow(window);
+    Camera camera= Camera(window, &player);
 
     // render loop
     MasterRender renderer = MasterRender();

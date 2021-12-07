@@ -11,3 +11,6 @@ Final Project of ZJU Computer Graphic (by Wu Hongzhi)
 
 2021.12.6 实现人物移动
 通过 ↑ ↓ ← → 实现人物控制，disable了跳跃功能
+
+2021.12.7 实现相机随人物移动
+新增鼠标，左键左右移动视角，右键上下移动视角
