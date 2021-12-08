@@ -20,17 +20,17 @@ private:
     // }
 
     void checkInputs(){
-        if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
+        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
             this->currentSpeed = RUN_SPEED;
-        }else if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
+        }else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
             this->currentSpeed = -RUN_SPEED;
         }else{
             this->currentSpeed = 0;
         }
 
-        if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
+        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
             this->currentTurnSpeed = TURN_SPEED;
-        }else if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
+        }else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
             this->currentTurnSpeed = -TURN_SPEED;
         }else{
             this->currentTurnSpeed = 0;
