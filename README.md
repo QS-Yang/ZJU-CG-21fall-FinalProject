@@ -14,3 +14,5 @@ Final Project of ZJU Computer Graphic (by Wu Hongzhi)
 
 2021.12.7 实现相机随人物移动
 新增鼠标，左键左右移动视角，右键上下移动视角
+
+2021.12.8 实现mipmap, 减少材质锯齿
