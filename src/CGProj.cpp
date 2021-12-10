@@ -57,16 +57,16 @@ int main()
     //Render
     Loader loader;
     //Load Texture of Terrain
-    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("texture/grass.png"));
-    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("texture/path.png"));
+    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("../texture/grass.png"));
+    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("../texture/path.png"));
 
     TerrainTexturePack texturePack(backgroundTexture, rTexture, gTexture, bTexture);
-    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("texture/blendMap.png"));
+    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("../texture/blendMap.png"));
     //
-    vector<string> filenames{"object/Car2.obj"};
-    Texture rawtexture=Texture(loader.loadTexture("texture/white.png"));
+    vector<string> filenames{"../object/Car2.obj"};
+    Texture rawtexture=Texture(loader.loadTexture("../texture/white.png"));
 
     vector<Entity> entities;
 
@@ -84,12 +84,12 @@ int main()
 
     Light light = Light(glm::vec3(0,0,-20), glm::vec3(1,1,1));
 
-    Terrain terrain1(0, 0, loader, texturePack, blendMap, "texture/heightmap.png");
-    Terrain terrain2(1, 0, loader, texturePack, blendMap, "texture/heightmap.png");
+    Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
+    // Terrain terrain2(1, 0, loader, texturePack, blendMap, "../texture/heightmap.png");
 
     // Player try
-    ObjLoader PLoader = ObjLoader("object/stanfordBunny.obj", loader);
-    Texture Prawtexture=Texture(loader.loadTexture("texture/mud.png"));
+    ObjLoader PLoader = ObjLoader("../object/Car2.obj", loader);
+    Texture Prawtexture=Texture(loader.loadTexture("../texture/mud.png"));
     Model Pmodel = PLoader.Draw();
     TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
     Ptexturedmodel.texture.setHasTransparency(0);
@@ -97,7 +97,7 @@ int main()
     Texture Ptexture = Ptexturedmodel.texture;
     Ptexture.shineDamper = 10;
     Ptexture.reflectivity = 1;
-    Player player = Player(Ptexturedmodel, glm::vec3(0, 0, -25), 0, 0, 0, 1);
+    Player player = Player(Ptexturedmodel, glm::vec3(0, 0, 0), 0, 0, 0, 1);
     player.addWindow(window);
     Camera camera= Camera(window, &player);
 
@@ -112,12 +112,12 @@ int main()
         lastFrame = currentFrame;
 
         processInput(window);
+        player.move(deltaTime, terrain1);
         camera.move();
-        player.move(deltaTime);
 
         renderer.processEntity(player);
         renderer.processTerrain(terrain1);
-        renderer.processTerrain(terrain2);
+        // renderer.processTerrain(terrain2);
         for(int i=0;i<entities.size(); i++){
             renderer.processEntity(entities[i]);
         }

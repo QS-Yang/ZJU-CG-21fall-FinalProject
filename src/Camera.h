@@ -13,7 +13,7 @@ using namespace glm;
 
 class Camera{
 public:
-    float distanceFromPlayer = 50;
+    float distanceFromPlayer = 10;
     float angleAroundPlayer = 0;
 
     vec3 position = vec3(0,0,0);
@@ -113,3 +113,13 @@ public:
     }
 
 };
+
+mat4 createViewMatrix(Camera camera){
+	mat4 viewMat = mat4(1.0);
+	viewMat = rotate<float>(viewMat, radians(camera.pitch), vec3(1, 0, 0));
+	viewMat = rotate<float>(viewMat, radians(camera.yaw), vec3(0, 1, 0));
+	vec3 cameraPos = camera.position;
+	vec3 negCameraPos = -cameraPos;
+	viewMat = translate<float>(viewMat, negCameraPos);
+	return viewMat;
+}

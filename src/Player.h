@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.h"
+#include "Terrain.h"
+#include "Matrix.h"
 
 class Player: public Entity 
 {
@@ -14,6 +16,8 @@ private:
     float currentSpeed = 0;
     float currentTurnSpeed = 0;
     float upwardsSpeed = 0;
+
+    bool isInAir = false;
 
     // void jump() {
     //     this->upwardsSpeed = JUMP_POWER;
@@ -53,7 +57,7 @@ public:
         this->window = window;
     }
 
-    void move(float delta) {
+    void move(float delta, Terrain terrain) {
         checkInputs();
         Rot(0, currentTurnSpeed * delta, 0);
         float distance = currentSpeed * delta;
@@ -61,17 +65,20 @@ public:
         float dz = distance * cos(radians(this->ry));
         Up(dx, 0, dz); 
         //std::cout << this->ry << std::endl;   
-        // if(this->upwardsSpeed > -JUMP_POWER && this->upwardsSpeed < 0){
-        //     this->upwardsSpeed -= GRAVITY * delta;
-        // }else if(this->upwardsSpeed > 0){
-        //     this->upwardsSpeed -= GRAVITY * delta;
-        // }else{
+        if(this->upwardsSpeed > -JUMP_POWER && this->upwardsSpeed < 0){
+            this->upwardsSpeed -= GRAVITY * delta;
+        }else if(this->upwardsSpeed > 0){
+            this->upwardsSpeed -= GRAVITY * delta;
+        }else{
+            this->upwardsSpeed = 0;
+        }
+        Up(0, this->upwardsSpeed * delta, 0);
+        float terrainHeight = terrain.getHeightOfTerrain(position.x, position.z); 
+        this->position.y = terrainHeight;
+        // if(this->position.y < terrainHeight){
         //     this->upwardsSpeed = 0;
-        // }
-        // Up(0, this->upwardsSpeed * delta, 0);
-        // if(this->ry < TERRAIN_HEIGHT){
-        //     this->upwardsSpeed = 0;
-        //     this->ry = TERRAIN_HEIGHT;
+        //     this->isInAir = false;
+        //     this->position.y = terrainHeight;
         // }
     }
 

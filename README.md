@@ -18,3 +18,8 @@ Final Project of ZJU Computer Graphic (by Wu Hongzhi)
 2021.12.8 实现mipmap, 减少材质锯齿
 
 2021.12.8 实现地形高度变化
+
+2021.12.10 实现地形碰撞检测
+修正了player.h中的错误
+警告：Terrain中的getHeightOfTerrain函数经过了魔改
+

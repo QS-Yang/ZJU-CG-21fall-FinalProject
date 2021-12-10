@@ -1,6 +1,7 @@
 #pragma once
 #include "Model.h"
 #include "Loader.h"
+#include "Matrix.h"
 #include "Texture.h"
 #include "TerrainTexturePack.h"
 #include "TerrainTexture.h"
@@ -19,9 +20,12 @@ public:
 
 	float x;
 	float z;
+	int height, width;
 	Model model;
 	TerrainTexturePack texturePack;
 	TerrainTexture blendMap;
+
+	float **heights;
 
 	Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, string heightMap) {
 		this->texturePack = texturePack;
@@ -31,12 +35,39 @@ public:
 		this->model = GenTerrain(loader, heightMap);
 	}
 
+	float getHeightOfTerrain(float worldX, float worldZ){
+		float terrainX = worldX;
+		float terrainZ = worldZ;
+		float gridSquareSize = SIZE / (float)(height-1);
+		int gridX = floor(terrainX/gridSquareSize);
+		int gridZ = floor(terrainZ/gridSquareSize);
+		if(gridX >= height-1 || gridZ >= height-1 || gridX<0 || gridZ<0){
+			return 0;
+		}
+		float remainX=terrainX, remainZ=terrainZ;
+		while(remainX>gridSquareSize) remainX-=gridSquareSize;
+		while(remainZ>gridSquareSize) remainZ-=gridSquareSize;
+		float xCoord = (remainX)/gridSquareSize;
+		float zCoord = (remainZ)/gridSquareSize;
+		float answer;
+		if(xCoord <= 1-zCoord){
+			answer = barryCentric(vec3(0, heights[gridX][gridZ], 0), vec3(1, heights[gridX+1][gridZ], 0), vec3(0, heights[gridX][gridZ+1], 1), vec2(xCoord, zCoord));
+		} else {
+			answer = barryCentric(vec3(1, heights[gridX+1][gridZ], 0), vec3(1, heights[gridX+1][gridZ+1], 1), vec3(0, heights[gridX][gridZ+1], 1), vec2(xCoord, zCoord));
+		}
+		return answer;
+	}
+
 	Model GenTerrain(Loader loader, string heightMap) {
 
-		int width, height, nrChannels;
+		int nrChannels;
 		unsigned char* data = stbi_load(heightMap.c_str(), &width, &height, &nrChannels, 0);
 
 		int VERTEX_COUNT = height;
+		heights = new float*[VERTEX_COUNT];
+		for(int i=0;i<VERTEX_COUNT;i++){
+			heights[i] = new float[VERTEX_COUNT];
+		}
 		//int cnt = VERTEX_COUNT * VERTEX_COUNT;
 		float* vertices = new float[cnt * 3] ;
 		float* normals = new float[cnt * 3];
@@ -47,7 +78,9 @@ public:
 		for (int i = 0; i < VERTEX_COUNT; i++) {
 			for (int j = 0; j < VERTEX_COUNT; j++) {
 				vertices[vertexPointer * 3] = -SIZE + (float)j / ((float)VERTEX_COUNT - 1) * SIZE;
-				vertices[vertexPointer * 3 + 1] = getHeight(j,i,height, width, data);
+				float tHeight = getHeight(j, i, height, width, data);
+				vertices[vertexPointer * 3 + 1] = tHeight;
+				heights[j][i]=tHeight;
 				vertices[vertexPointer * 3 + 2] = -SIZE + (float)i / ((float)VERTEX_COUNT - 1) * SIZE;
 				vec3 normal = calculateNormal(j, i, height, width, data);
 				normals[vertexPointer * 3] = normal.x;

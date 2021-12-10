@@ -1,5 +1,4 @@
 #pragma once
-#include "Camera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -18,12 +17,10 @@ mat4 createTransMatirx(vec3 trans, float rx, float ry, float rz, float _scale) {
 	return ret;
 }
 
-mat4 createViewMatrix(Camera camera){
-	mat4 viewMat = mat4(1.0);
-	viewMat = rotate<float>(viewMat, radians(camera.pitch), vec3(1, 0, 0));
-	viewMat = rotate<float>(viewMat, radians(camera.yaw), vec3(0, 1, 0));
-	vec3 cameraPos = camera.position;
-	vec3 negCameraPos = -cameraPos;
-	viewMat = translate<float>(viewMat, negCameraPos);
-	return viewMat;
+float barryCentric(vec3 p1, vec3 p2, vec3 p3, vec2 pos){
+	float det = (p2.z-p3.z)*(p1.x-p3.x)+(p3.x-p2.x)*(p1.z-p3.z);
+	float l1 = ((p2.z-p3.z)*(pos.x-p3.x)+(p3.x-p2.x)*(pos.y-p3.z))/det;
+	float l2 = ((p3.z-p1.z)*(pos.x-p3.x)+(p1.x-p3.x)*(pos.y-p3.z))/det;
+	float l3 = 1.0-l1-l2;
+	return l1*p1.y+l2*p2.y+l3*p3.y;
 }
