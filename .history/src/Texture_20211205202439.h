@@ -9,8 +9,6 @@ public:
 	int hasTransparency = 0;
 	int useFakeLighting = 0;
 
-	int numberOfRows = 1;
-	
 	Texture() {
 		this->textureID = 0;
 	}

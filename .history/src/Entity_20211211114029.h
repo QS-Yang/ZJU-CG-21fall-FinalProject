@@ -30,7 +30,6 @@ public:
 		int row = textureIndex / model.texture.numberOfRows;
 		return (float)row / (float)model.texture.numberOfRows;
 	}
-	
 	void Rot(float dx, float dy, float dz) {
 		this->rx += dx;
 		this->ry += dy;

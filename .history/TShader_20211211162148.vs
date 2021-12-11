@@ -15,7 +15,7 @@ uniform mat4 projectMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPos;
 const float density = 0.03; //雾的浓度
-const float gradient = 1.5; //随距离增加
+const float gradient = 5; //随距离增加
 
 
 void main()

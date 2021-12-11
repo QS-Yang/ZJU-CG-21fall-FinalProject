@@ -121,14 +121,6 @@ public:
 		offsetLocation = getUniformLocation("offset");
 	}
 
-	void loadNumberOfRows(float numberOfRows) {
-		glUniform1f(numberOfRowsLocation, numberOfRows);
-	}
-
-	void loadOffset(float x, float y) {
-		glUniform2f(offsetLocation, x, y);
-	}
-	
 	void loadSkyColor(float r, float g, float b){
 		loadVector(skyColorLocation, vec3(r,g,b));
 	}

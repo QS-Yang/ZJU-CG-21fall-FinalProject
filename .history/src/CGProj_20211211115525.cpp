@@ -14,7 +14,6 @@
 #include <vector>
 #include <iostream>
 
-#define random(a, b) (rand() % (b - a + 1) + a)
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -80,40 +79,12 @@ int main()
         Texture texture = texturedmodel.texture;
         texture.shineDamper = 10;
         texture.reflectivity = 1;
-        entities.push_back(Entity(texturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.0));
-    }
-
-    Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
-    
-    //地面随即加草
-    ObjLoader objloader("../object/fern.obj", loader);
-    Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
-    fernTextureAtlas.numberOfRows = 2;
-    TexturedModel fern = TexturedModel(objloader.Draw(), fernTextureAtlas);
-
-    //地面的树
-    ObjLoader treeLoader("../object/tree.obj", loader);
-    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
-    TexturedModel tree = TexturedModel(treeLoader.Draw(), treeTextureAtlas);
-
-    for(int i = 0; i < 400; i++){
-        if(i % 2 == 0){
-            float x = random(0, 256);
-            float z = random(0, 1000);
-            float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.2f));
-        }
-        if(i % 5 == 0){
-            float x = random(0, 256);
-            float z = random(0, 1000);
-            float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 1.5f));
-        }
+        entities.push_back(Entity(texturedmodel, 1, glm::vec3(0, 0, -25), 0, 0, 0, 1));
     }
 
     Light light = Light(glm::vec3(0,0,-20), glm::vec3(1,1,1));
 
-    
+    Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
     // Terrain terrain2(1, 0, loader, texturePack, blendMap, "../texture/heightmap.png");
 
     // Player try
@@ -126,7 +97,7 @@ int main()
     Texture Ptexture = Ptexturedmodel.texture;
     Ptexture.shineDamper = 10;
     Ptexture.reflectivity = 1;
-    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.5);
+    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1);
     player.addWindow(window);
     Camera camera= Camera(window, &player);
 

@@ -13,7 +13,6 @@
 #include "TerrainTexturePack.h"
 #include <vector>
 #include <iostream>
-
 #define random(a, b) (rand() % (b - a + 1) + a)
 using namespace std;
 
@@ -66,7 +65,7 @@ int main()
     TerrainTexturePack texturePack(backgroundTexture, rTexture, gTexture, bTexture);
     TerrainTexture blendMap = TerrainTexture(loader.loadTexture("../texture/blendMap.png"));
     //
-    vector<string> filenames{"../object/Car2.obj"};
+    vector<string> filenames{"../object/Car2.obj", "../object/fern.obj"};
     Texture rawtexture=Texture(loader.loadTexture("../texture/white.png"));
 
     vector<Entity> entities;
@@ -84,30 +83,18 @@ int main()
     }
 
     Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
-    
     //地面随即加草
     ObjLoader objloader("../object/fern.obj", loader);
     Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
     fernTextureAtlas.numberOfRows = 2;
     TexturedModel fern = TexturedModel(objloader.Draw(), fernTextureAtlas);
 
-    //地面的树
-    ObjLoader treeLoader("../object/tree.obj", loader);
-    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
-    TexturedModel tree = TexturedModel(treeLoader.Draw(), treeTextureAtlas);
-
     for(int i = 0; i < 400; i++){
         if(i % 2 == 0){
-            float x = random(0, 256);
-            float z = random(0, 1000);
+            float x = rand() * 800 - 400;
+            float z = rand() * (-600);
             float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.2f));
-        }
-        if(i % 5 == 0){
-            float x = random(0, 256);
-            float z = random(0, 1000);
-            float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 1.5f));
+            entities.push_back(Entity(fern, 1, glm::vec3(x, y, z), 0, rand() * 360, 0, 1));
         }
     }
 

@@ -22,15 +22,6 @@ public:
 		this->scale = scale;
 	}
 
-	float getTextureXOffset() {
-		int column = textureIndex % model.texture.numberOfRows;
-		return (float)column / (float)model.texture.numberOfRows;
-	}
-	float getTextureYOffset() {
-		int row = textureIndex / model.texture.numberOfRows;
-		return (float)row / (float)model.texture.numberOfRows;
-	}
-	
 	void Rot(float dx, float dy, float dz) {
 		this->rx += dx;
 		this->ry += dy;

@@ -98,7 +98,6 @@ public:
 	void prepareInstance(Entity entity){
 		mat4 transMatrix = createTransMatirx(entity.position, entity.rx, entity.ry, entity.rz, entity.scale);
 		shader.loadTransMatrix(transMatrix);
-		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 	}
 
 	// void Redenring(Entity entity, ShaderProgram shader) {
