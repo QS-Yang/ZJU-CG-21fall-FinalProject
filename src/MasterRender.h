@@ -21,12 +21,12 @@ public:
     float GREEN = 0.5;
     float BLUE = 0.5;
     
-    ShaderProgram shader= ShaderProgram("../Shader.vs", "../Shader.fs");
+    ShaderProgram shader= ShaderProgram("Shader.vs", "Shader.fs");
     //EntityRender renderer = EntityRender(shader);
     EntityRender renderer;
 
     TerrainRender terrainRender;
-    TerrainShader terrainShader = TerrainShader("../TShader.vs", "../TShader.fs");
+    TerrainShader terrainShader = TerrainShader("TShader.vs", "TShader.fs");
 
     std::map<TexturedModel, std::vector<Entity>> entities;
     std::vector<Terrain> terrains;
@@ -39,18 +39,18 @@ public:
         terrainRender = TerrainRender(terrainShader, projectMatrix);
     }
 
-    void render(Light sun, Camera camera){
+    void render(vector<Light> lights, Camera camera){
         Prepare();
         shader.Start();
         shader.loadSkyColor(RED, GREEN, BLUE);
-        shader.loadLight(sun);
+        shader.loadLights(lights);
         shader.loadViewMatrix(camera);
         renderer.newRender(entities);
         shader.Stop();
 
         terrainShader.Start();
         terrainShader.loadSkyColor(RED, GREEN, BLUE);
-        terrainShader.loadLight(sun);
+        terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
         terrainRender.render(terrains);
         terrainShader.Stop();

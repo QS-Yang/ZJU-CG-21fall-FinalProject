@@ -9,6 +9,8 @@
 #include <iostream>
 using namespace glm;
 
+#define MAX_LIGHTS 4
+
 class TerrainShader {
 private:
 	int programID;
@@ -17,8 +19,8 @@ private:
 	unsigned int transMatrixLocation;
 	unsigned int projectMatrixLocation;
 	unsigned int viewMatrixLocation;
-	unsigned int lightPosLocation;
-	unsigned int lightColorLocation;
+	unsigned int lightPosLocation[MAX_LIGHTS];
+	unsigned int lightColorLocation[MAX_LIGHTS];
 	unsigned int shineDamperLocation;
 	unsigned int reflectLocation;
 	unsigned int skyColorLocation;
@@ -115,11 +117,14 @@ public:
 		transMatrixLocation = getUniformLocation("transMatrix");
 		projectMatrixLocation = getUniformLocation("projectMatrix");
 		viewMatrixLocation = getUniformLocation("viewMatrix");
-		lightPosLocation = getUniformLocation("lightPos");
-		lightColorLocation = getUniformLocation("lightColor");
 		shineDamperLocation = getUniformLocation("shineDamper");
 		reflectLocation = getUniformLocation("reflectivity");
 		skyColorLocation = getUniformLocation("skyColor");
+		for(int i=0; i<MAX_LIGHTS;i++){
+			lightPosLocation[i] = getUniformLocation("lightPos[" + to_string(i) + "]");
+			lightColorLocation[i] = getUniformLocation("lightColor["+ to_string(i) + "]");
+		}
+
 		//check写对没有
 		location_backgroundTexture = getUniformLocation("backgroundTexture");
 		location_rTexture = getUniformLocation("rTexture");
@@ -149,9 +154,16 @@ public:
 		loadFloat(reflectLocation, reflectivity);
 	}
 
-	void loadLight(Light light) {
-		loadVector(lightPosLocation, light.pos);
-		loadVector(lightColorLocation, light.color);
+	void loadLights(vector<Light> lights){
+		for(int i=0; i<MAX_LIGHTS; i++){
+			if(i < lights.size()){
+				loadVector(lightPosLocation[i], lights[i].pos);
+				loadVector(lightColorLocation[i], lights[i].color);
+			}else{
+				loadVector(lightPosLocation[i], vec3(0, 0, 0));
+				loadVector(lightColorLocation[i], vec3(0, 0, 0));
+			}
+		}
 	}
 
 	void loadTransMatrix(mat4 matrix) {
