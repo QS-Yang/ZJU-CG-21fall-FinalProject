@@ -13,7 +13,7 @@ using namespace glm;
 
 class Camera{
 public:
-    float distanceFromPlayer = 10;
+    float distanceFromPlayer = 20;
     float angleAroundPlayer = 0;
 
     vec3 position = vec3(0,0,0);

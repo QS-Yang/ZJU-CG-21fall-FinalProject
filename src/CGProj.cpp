@@ -58,16 +58,16 @@ int main()
     //Render
     Loader loader;
     //Load Texture of Terrain
-    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("texture/grass.png"));
-    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("texture/path.png"));
+    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("../texture/grass.png"));
+    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("../texture/path.png"));
 
     TerrainTexturePack texturePack(backgroundTexture, rTexture, gTexture, bTexture);
-    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("texture/blendMap.png"));
+    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("../texture/blendMap.png"));
     //
-    vector<string> filenames{"object/Car2.obj"};
-    Texture rawtexture=Texture(loader.loadTexture("texture/white.png"));
+    vector<string> filenames{"../object/Car2.obj"};
+    Texture rawtexture=Texture(loader.loadTexture("../texture/white.png"));
 
     vector<Entity> entities;
 
@@ -83,17 +83,17 @@ int main()
         entities.push_back(Entity(texturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.0));
     }
 
-    Terrain terrain1(1, 1, loader, texturePack, blendMap, "texture/heightmap.png");
+    Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
     
     //地面随即加草
-    ObjLoader objloader("object/fern.obj", loader);
-    Texture fernTextureAtlas = Texture(loader.loadTexture("texture/fern.png"));
+    ObjLoader objloader("../object/fern.obj", loader);
+    Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
     fernTextureAtlas.numberOfRows = 2;
     TexturedModel fern = TexturedModel(objloader.Draw(), fernTextureAtlas);
 
     //地面的树
-    ObjLoader treeLoader("object/tree.obj", loader);
-    Texture treeTextureAtlas = Texture(loader.loadTexture("texture/tree.png"));
+    ObjLoader treeLoader("../object/tree.obj", loader);
+    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
     TexturedModel tree = TexturedModel(treeLoader.Draw(), treeTextureAtlas);
 
     for(int i = 0; i < 400; i++){
@@ -111,18 +111,19 @@ int main()
         }
     }
 
-    Light light = Light(glm::vec3(0,0,-20), glm::vec3(1,1,1));
+    Light light = Light(glm::vec3(0,1000,-7000), glm::vec3(0.4,0.4,0.4), glm::vec3(1,0,0));
     vector<Light> lights;
     lights.push_back(light);
-    lights.push_back(Light(glm::vec3(-200,10,-200), glm::vec3(10,0,0)));
-    lights.push_back(Light(glm::vec3(200,10,200), glm::vec3(0,0,10)));
+    lights.push_back(Light(glm::vec3(185,10,-293), glm::vec3(2,0,0), glm::vec3(1, 0.01, 0.002)));
+    lights.push_back(Light(glm::vec3(200,10,200), glm::vec3(0,2,2), glm::vec3(1, 0.01, 0.002)));
+    lights.push_back(Light(glm::vec3(293,7,-305), glm::vec3(2,2,0), glm::vec3(1, 0.01, 0.002)));
 
     
     // Terrain terrain2(1, 0, loader, texturePack, blendMap, "../texture/heightmap.png");
 
     // Player try
-    ObjLoader PLoader = ObjLoader("object/Car2.obj", loader);
-    Texture Prawtexture=Texture(loader.loadTexture("texture/mud.png"));
+    ObjLoader PLoader = ObjLoader("../object/Car2.obj", loader);
+    Texture Prawtexture=Texture(loader.loadTexture("../texture/mud.png"));
     Model Pmodel = PLoader.Draw();
     TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
     Ptexturedmodel.texture.setHasTransparency(0);

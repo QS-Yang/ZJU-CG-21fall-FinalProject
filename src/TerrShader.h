@@ -16,19 +16,20 @@ private:
 	int programID;
 	int vertexShaderID;
 	int fragmentShaderID;
-	unsigned int transMatrixLocation;
-	unsigned int projectMatrixLocation;
-	unsigned int viewMatrixLocation;
-	unsigned int lightPosLocation[MAX_LIGHTS];
-	unsigned int lightColorLocation[MAX_LIGHTS];
-	unsigned int shineDamperLocation;
-	unsigned int reflectLocation;
-	unsigned int skyColorLocation;
-	unsigned int location_backgroundTexture;
-	unsigned int location_rTexture;
-	unsigned int location_gTexture;
-	unsigned int location_bTexture;
-	unsigned int location_blendMap;
+	int transMatrixLocation;
+	int projectMatrixLocation;
+	int viewMatrixLocation;
+	int lightPosLocation[MAX_LIGHTS];
+	int lightColorLocation[MAX_LIGHTS];
+	int attenuationLocation[MAX_LIGHTS]={0};
+	int shineDamperLocation;
+	int reflectLocation;
+	int skyColorLocation;
+	int location_backgroundTexture;
+	int location_rTexture;
+	int location_gTexture;
+	int location_bTexture;
+	int location_blendMap;
 
 	unsigned int loadShader(int type, const char* Path) {
 		std::string Code;
@@ -123,6 +124,7 @@ public:
 		for(int i=0; i<MAX_LIGHTS;i++){
 			lightPosLocation[i] = getUniformLocation("lightPos[" + to_string(i) + "]");
 			lightColorLocation[i] = getUniformLocation("lightColor["+ to_string(i) + "]");
+			attenuationLocation[i] = getUniformLocation("attenuation[" + to_string(i)+ "]");
 		}
 
 		//check写对没有
@@ -159,9 +161,11 @@ public:
 			if(i < lights.size()){
 				loadVector(lightPosLocation[i], lights[i].pos);
 				loadVector(lightColorLocation[i], lights[i].color);
+				loadVector(attenuationLocation[i], lights[i].attenuation); 
 			}else{
 				loadVector(lightPosLocation[i], vec3(0, 0, 0));
 				loadVector(lightColorLocation[i], vec3(0, 0, 0));
+				loadVector(attenuationLocation[i], vec3(1, 0, 0));
 			}
 		}
 	}
