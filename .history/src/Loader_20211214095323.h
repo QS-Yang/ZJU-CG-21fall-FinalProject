@@ -64,13 +64,6 @@ public:
 		return Model(VAO, lengthofIdx);
 	}
 	
-	Model LoadToV(float positions[], int length, int dimensions) {
-		unsigned int VAO = CreateVAO();
-		storeDataIntoAttriList(positions, length, 0, dimensions);
-		UnBindVAO();
-		return Model(VAO, length / dimensions);
-	}
-
 	unsigned int loadTexture(string filename) {
 
 		unsigned int textureID;
@@ -107,37 +100,5 @@ public:
 		return textureID;
 	}
 
-	int loadCubeMap(string textureFiles[], int length) {
-		unsigned int textureID;
-		glGenTextures(1, &textureID);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-		for(int i = 0; i < length; i++) {
-			TextureData data = decodeTextureFile(textureFiles[i]);
-			if(data.nrChannels == 3) {
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, data.width, data.height, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data);
-			}
-			else if(data.nrChannels == 4) {
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.width, data.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data);
-			}
-		}
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		Textures.push_back(textureID);
-		return textureID;
-	}
-
-	TextureData decodeTextureFile(string filename) {
-		int width, height, nrChannels;
-		unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
-		if (data) {
-			return TextureData(width, height, nrChannels, data);
-		}
-		else {
-			std::cout << "Failed to load skybox texture" << std::endl;
-		}
-		stbi_image_free(data);
-		return TextureData(0, 0, 0, nullptr);
-	}
+	T
 };

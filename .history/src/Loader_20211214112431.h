@@ -132,7 +132,7 @@ public:
 		int width, height, nrChannels;
 		unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
 		if (data) {
-			return TextureData(width, height, nrChannels, data);
+			return TextureData(width, height, nrChannels,data);
 		}
 		else {
 			std::cout << "Failed to load skybox texture" << std::endl;

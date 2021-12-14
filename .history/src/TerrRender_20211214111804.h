@@ -1,0 +1,76 @@
+#pragma once
+#include "TerrShader.h"
+#include "Terrain.h"
+#include "TerrainTexture.h"
+#include "TerrainTexturePack.h"
+
+#include <vector>
+using namespace glm;
+
+class TerrainRender {
+
+private:
+	TerrainShader shader;
+
+public:
+	TerrainRender() {
+
+	}
+	TerrainRender(TerrainShader shader, mat4 projectionMatrix ) {
+		this->shader = shader;
+		shader.Start();
+		shader.loadProjectMatrix(projectionMatrix);
+		shader.connectTextureUnits();
+		shader.Stop();
+	}
+
+	void render(std::vector<Terrain> terrains) {
+		for (int i = 0; i < terrains.size(); i++) {
+			prepareTerrain(terrains[i]);
+			loadModelMatrix(terrains[i]);
+			glDrawElements(GL_TRIANGLES, 0, terrains[i].model.VertexCount);
+			unbindTextureModel();
+		}
+	}
+
+	void prepareTerrain(Terrain terrain) {
+		Model rawModel = terrain.model;
+
+		glBindVertexArray(rawModel.Vid);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
+		bindTextures(terrain);
+		shader.loadShine(1, 0); //可能需要修改
+
+		// glActiveTexture(GL_TEXTURE0);
+		// glBindTexture(GL_TEXTURE_2D, terrain.texture.textureID);
+	}
+
+	void bindTextures(Terrain terrain) {
+		TerrainTexturePack texturePack = terrain.texturePack;
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texturePack.getBackgroundTexture().getTextureID());
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texturePack.getRTexture().getTextureID());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, texturePack.getGTexture().getTextureID());
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, texturePack.getBTexture().getTextureID());
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, terrain.blendMap.getTextureID());
+	}
+
+	void unbindTextureModel() {
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glBindVertexArray(0);
+	}
+
+	void loadModelMatrix(Terrain terrain) {
+		mat4 transMatrix = createTransMatirx(vec3(terrain.x, 0, terrain.z), 0, 0, 0, 1);
+		shader.loadTransMatrix(transMatrix);
+	}
+};

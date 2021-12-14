@@ -32,15 +32,13 @@ public:
     std::map<TexturedModel, std::vector<Entity>> entities;
     std::vector<Terrain> terrains;
 
-    SkyboxRender* skyboxRender;
-
-    MasterRender(Loader loader) {
+    Sky
+    MasterRender() {
         glEnable(GL_CULL_FACE);
         glEnable(GL_BACK);
         createProjectMatrix();
         renderer = EntityRender(shader, projectMatrix);
         terrainRender = TerrainRender(terrainShader, projectMatrix);
-        skyboxRender = new SkyboxRender(loader, projectMatrix);
     }
 
     void render(vector<Light> lights, Camera camera){
@@ -58,8 +56,6 @@ public:
         terrainShader.loadViewMatrix(camera);
         terrainRender.render(terrains);
         terrainShader.Stop();
-
-        skyboxRender->render(camera);
         terrains.clear();
         entities.clear();
     }

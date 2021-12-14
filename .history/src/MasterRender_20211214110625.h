@@ -34,7 +34,7 @@ public:
 
     SkyboxRender* skyboxRender;
 
-    MasterRender(Loader loader) {
+    MasterRender() {
         glEnable(GL_CULL_FACE);
         glEnable(GL_BACK);
         createProjectMatrix();
@@ -58,8 +58,6 @@ public:
         terrainShader.loadViewMatrix(camera);
         terrainRender.render(terrains);
         terrainShader.Stop();
-
-        skyboxRender->render(camera);
         terrains.clear();
         entities.clear();
     }

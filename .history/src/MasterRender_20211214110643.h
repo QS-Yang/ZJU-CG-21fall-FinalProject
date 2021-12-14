@@ -58,8 +58,6 @@ public:
         terrainShader.loadViewMatrix(camera);
         terrainRender.render(terrains);
         terrainShader.Stop();
-
-        skyboxRender->render(camera);
         terrains.clear();
         entities.clear();
     }
