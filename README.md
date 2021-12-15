@@ -24,3 +24,5 @@ Final Project of ZJU Computer Graphic (by Wu Hongzhi)
 警告：Terrain中的getHeightOfTerrain函数经过了魔改
 
 2021.12.15 完善skybox，就是代码感觉越来越屎山了orz
+
+2021.12.15 完成zoom in/out，更换obj把小车正了过来，视角转换全部改为鼠标左键控制

@@ -67,7 +67,7 @@ public:
     // }
 
     void calculatePitch(){
-        if(glfwGetMouseButton(window, 1)==GLFW_PRESS){
+        if(glfwGetMouseButton(window, 0)==GLFW_PRESS){
             float pitchChange = yoffset * 0.1;
             pitch -= pitchChange;
         }
