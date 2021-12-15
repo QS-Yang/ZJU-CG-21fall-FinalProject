@@ -23,3 +23,4 @@ Final Project of ZJU Computer Graphic (by Wu Hongzhi)
 修正了player.h中的错误
 警告：Terrain中的getHeightOfTerrain函数经过了魔改
 
+2021.12.15 完善skybox，就是代码感觉越来越屎山了orz

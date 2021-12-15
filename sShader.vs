@@ -1,6 +1,6 @@
-#version 400
+#version 400 core
 
-in vec3 position;
+layout (location = 0) in vec3 position;
 out vec3 textureCoord;
 
 uniform mat4 projectionMatrix;
@@ -9,5 +9,6 @@ uniform mat4 viewMatrix;
 void main()
 {
     textureCoord = position;
-    gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);
+    vec4 pos = projectionMatrix * viewMatrix * vec4(position, 1.0);
+    gl_Position = pos.xyww;
 }

@@ -52,30 +52,33 @@ float VERTEICES[] = {
 class SkyboxRender {
 private:
     std::string TEXTUREFILES[6] = {
-        "../skybox/right.png",
-        "../skybox/left.png",
-        "../skybox/top.png",
-        "../skybox/bottom.png",
-        "../skybox/back.png",
-        "../skybox/front.png"
+        "skybox/right.png",
+        "skybox/left.png",
+        "skybox/top.png",
+        "skybox/bottom.png",
+        "skybox/back.png",
+        "skybox/front.png"
     };
 public:
     Model cube;
     unsigned int textureID;
-    SkyboxShader* shader;
+    SkyboxShader shader;
+    SkyboxRender(){}
 
     SkyboxRender(Loader loader, mat4 projectMatrix) {
         cube = loader.LoadToV(VERTEICES, (int)(sizeof(VERTEICES) / sizeof(VERTEICES[0])), 3);
         textureID = loader.loadCubeMap(TEXTUREFILES, 6);
-        shader = new SkyboxShader("../sShader.vs", "../sShader.fs");
-        shader->Start();
-        shader->loadProjectMatrix(projectMatrix);
-        shader->Stop();
+        shader = SkyboxShader("sShader.vs", "sShader.fs");
+        shader.Start();
+        shader.loadProjectMatrix(projectMatrix);
+        shader.Stop();
     }
 
     void render(Camera camera) {
-        shader->Start();
-        shader->loadViewMatrix(camera);
+        glDepthFunc(GL_LEQUAL);
+        shader.Start();
+        shader.setInt("cubeMap", 0);
+        shader.loadViewMatrix(camera);
         glBindVertexArray(cube.Vid);
         glEnableVertexAttribArray(0);
         glActiveTexture(GL_TEXTURE0);
@@ -83,6 +86,7 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, cube.VertexCount);
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);
-        shader->Stop();
+        glDepthFunc(GL_LESS);
+        shader.Stop();
     }
 };

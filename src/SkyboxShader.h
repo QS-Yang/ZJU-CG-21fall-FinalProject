@@ -46,6 +46,7 @@ private:
 	}
 
 public:
+	SkyboxShader(){}
     SkyboxShader(const char* vertexPath, const char* fragmentPath) {
 		vertexShaderID = loadShader(GL_VERTEX_SHADER, vertexPath);
 		fragmentShaderID = loadShader(GL_FRAGMENT_SHADER, fragmentPath);
@@ -81,7 +82,8 @@ public:
 
 	void loadViewMatrix(Camera camera) {
 		mat4 viewMatrix = createViewMatrix(camera);
-		loadMatrix(viewMatrixLocation, viewMatrix);
+		mat4 view =  glm::mat4(glm::mat3(viewMatrix));
+		loadMatrix(viewMatrixLocation, view);
 	}
 
 	void loadProjectMatrix(mat4 matrix) {
@@ -97,4 +99,9 @@ public:
 		glBindAttribLocation(programID, 0, "position");
 		glBindAttribLocation(programID, 1, "textureCoord");
 	}
+
+	void setInt(const std::string &name, int value) const
+    { 
+        glUniform1i(glGetUniformLocation( programID, name.c_str()), value); 
+    }
 };
