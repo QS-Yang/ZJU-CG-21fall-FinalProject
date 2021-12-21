@@ -52,7 +52,7 @@ ObjLoader::ObjLoader(string filename, Loader loader)
                 GLint vtindex = stoi(words[i * 3 + 2]) >= 0 ? (stoi(words[i * 3 + 2]) - 1) : (stoi(words[i * 3 + 2]) + vt.size());
                 GLint vnindex = stoi(words[i * 3 + 3]) >= 0 ? (stoi(words[i * 3 + 3]) - 1) : (stoi(words[i * 3 + 3]) + vn.size());
 
-                //cout << vindex << " " << vtindex << " " << vnindex << endl;
+                cout << vindex << " " << vtindex << " " << vnindex << endl;
                 vIndexSets.push_back(vindex);
                 vTextureSets.push_back(vtindex);
                 vNormalSets.push_back(vnindex);

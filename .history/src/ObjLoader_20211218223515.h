@@ -20,7 +20,6 @@ public:
 	};
     ObjLoader(string filename, Loader loader);
 	Model Draw();
-    void CleanUp();
 
 private:
     vector<vector<GLfloat>> v;

@@ -31,7 +31,7 @@ void main()
 	pTexCoord = (textureCoord / numberOfRows) + offset;
 	// pTexCoord.x = (textureCoord.x /numberOfRows) + offset.x;
 	// pTexCoord.y = ((1.0 - textureCoord.y) /numberOfRows) + offset.y;
-	//pTexCoord = vec2(textureCoord.x, 1.0 - textureCoord.y);
+	pTexCoord = vec2(textureCoord.x, 1.0 - textureCoord.y);
 	vec3 actualNormal = normal;
 	if(useFakeLighting > 0.5){
 		actualNormal = vec3(0.0, 1.0, 0.0);

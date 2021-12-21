@@ -85,7 +85,7 @@ ObjLoader::ObjLoader(string filename, Loader loader)
             s>>x; s>>y;
             texture.push_back(x);
             //存在疑问
-            texture.push_back(1.0 - y);
+            texture.push_back(y);
             vt.push_back(texture);
         }
 	}

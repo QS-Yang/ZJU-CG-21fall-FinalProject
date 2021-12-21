@@ -136,7 +136,7 @@ int main()
     Texture Ptexture = Ptexturedmodel.texture;
     Ptexture.shineDamper = 10;
     Ptexture.reflectivity = 1;
-    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.0);
+    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1);
     player.addWindow(window);
     Camera camera= Camera(window, &player);
     glfwSetScrollCallback(window, scrollFunc);

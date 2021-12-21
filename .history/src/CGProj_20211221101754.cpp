@@ -126,17 +126,16 @@ int main()
     // Terrain terrain2(1, 0, loader, texturePack, blendMap, "../texture/heightmap.png");
 
     // Player try
-    ObjLoader PLoader = ObjLoader("../object/person.obj", loader);
-    Texture Prawtexture=Texture(loader.loadTexture("../texture/player.png"));
+    ObjLoader PLoader = ObjLoader("../object/car_test.obj", loader);
+    Texture Prawtexture=Texture(loader.loadTexture("../texture/car_diffuse.png"));
     Model Pmodel = PLoader.Draw();
-    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
-    //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
+    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, /*Texture()*/Prawtexture);
     Ptexturedmodel.texture.setHasTransparency(0);
     Ptexturedmodel.texture.setUseFakeLighting(0);
     Texture Ptexture = Ptexturedmodel.texture;
     Ptexture.shineDamper = 10;
     Ptexture.reflectivity = 1;
-    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.0);
+    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.5);
     player.addWindow(window);
     Camera camera= Camera(window, &player);
     glfwSetScrollCallback(window, scrollFunc);

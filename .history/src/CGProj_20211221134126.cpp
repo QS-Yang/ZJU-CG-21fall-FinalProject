@@ -126,11 +126,13 @@ int main()
     // Terrain terrain2(1, 0, loader, texturePack, blendMap, "../texture/heightmap.png");
 
     // Player try
-    ObjLoader PLoader = ObjLoader("../object/person.obj", loader);
-    Texture Prawtexture=Texture(loader.loadTexture("../texture/player.png"));
+    ObjLoader PLoader = ObjLoader("../object/car_test.obj", loader);
+    //Texture Prawtexture=Texture(loader.loadTexture("../texture/.png"));
     Model Pmodel = PLoader.Draw();
-    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
-    //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
+    std::cout << Pmodel.VertexCount << std::endl;
+    std::cout << Pmodel.Vid << std::endl;
+    //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
+    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
     Ptexturedmodel.texture.setHasTransparency(0);
     Ptexturedmodel.texture.setUseFakeLighting(0);
     Texture Ptexture = Ptexturedmodel.texture;

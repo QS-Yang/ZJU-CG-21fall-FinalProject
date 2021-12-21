@@ -33,26 +33,15 @@ ObjLoader::ObjLoader(string filename, Loader loader)
 
 		} else if(line.substr(0,2) == "f ") {
             vector<string> words = parser(line);
-
-            // std::string s = "";
-            // for(int i = 0; i < words.size(); i++) {
-            //     s += " " + words[i];
-                
-            // }
-            // cout << s << endl;
-            // cout << "v.size() = " << v.size() << "vt.size() = " << vt.size() << "vn.size() = " << vn.size() << endl;
-			
-            vector<GLint> vIndexSets;
+			vector<GLint> vIndexSets;
             vector<GLint> vTextureSets;
             vector<GLint> vNormalSets;
 
             for(int i = 0; i < 3; i++) {
-                //std:cout << stoi(words[i * 3 + 1]) << std::endl;
-                GLint vindex = stoi(words[i * 3 + 1]) >= 0 ? (stoi(words[i * 3 + 1]) - 1) : (stoi(words[i * 3 + 1]) + v.size());
-                GLint vtindex = stoi(words[i * 3 + 2]) >= 0 ? (stoi(words[i * 3 + 2]) - 1) : (stoi(words[i * 3 + 2]) + vt.size());
-                GLint vnindex = stoi(words[i * 3 + 3]) >= 0 ? (stoi(words[i * 3 + 3]) - 1) : (stoi(words[i * 3 + 3]) + vn.size());
+                int vindex = stoi(words[i * 3 + 1]) >= 0 ? (stoi(words[i * 3 + 1]) - 1) : (stoi(words[i * 3 + 1]) + v.size());
+                int vtindex = stoi(words[i * 3 + 2]) >= 0 ? (stoi(words[i * 3 + 2]) - 1) : (stoi(words[i * 3 + 2]) + vt.size());
+                int vnindex = stoi(words[i * 3 + 3]) >= 0 ? (stoi(words[i * 3 + 3]) - 1) : (stoi(words[i * 3 + 3]) + vn.size());
 
-                //cout << vindex << " " << vtindex << " " << vnindex << endl;
                 vIndexSets.push_back(vindex);
                 vTextureSets.push_back(vtindex);
                 vNormalSets.push_back(vnindex);
@@ -69,7 +58,7 @@ ObjLoader::ObjLoader(string filename, Loader loader)
 			f.push_back(vIndexSets);
             fvt.push_back(vTextureSets);
             fvn.push_back(vNormalSets);
-		} else if(line.substr(0,3) == "vn "){
+		} else if(line.substr(0,2) == "vn"){
             vector<GLfloat> NormalVector;
             GLfloat x, y, z;
             istringstream s(line.substr(3));

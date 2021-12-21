@@ -28,10 +28,9 @@ void main()
 	vec4 worldPos =transMatrix * vec4(position, 1.0);
 	vec4 positionRelativeToCam = viewMatrix * worldPos;
 	gl_Position = projectMatrix * positionRelativeToCam;
-	pTexCoord = (textureCoord / numberOfRows) + offset;
+	//pTexCoord = (textureCoord / numberOfRows) + offset;
 	// pTexCoord.x = (textureCoord.x /numberOfRows) + offset.x;
 	// pTexCoord.y = ((1.0 - textureCoord.y) /numberOfRows) + offset.y;
-	//pTexCoord = vec2(textureCoord.x, 1.0 - textureCoord.y);
 	vec3 actualNormal = normal;
 	if(useFakeLighting > 0.5){
 		actualNormal = vec3(0.0, 1.0, 0.0);

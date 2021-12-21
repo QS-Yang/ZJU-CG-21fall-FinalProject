@@ -33,16 +33,14 @@ ObjLoader::ObjLoader(string filename, Loader loader)
 
 		} else if(line.substr(0,2) == "f ") {
             vector<string> words = parser(line);
-
-            // std::string s = "";
-            // for(int i = 0; i < words.size(); i++) {
-            //     s += " " + words[i];
+            std::string s = "";
+            for(int i = 0; i < words.size(); i++) {
+                s += " " + words[i];
                 
-            // }
-            // cout << s << endl;
-            // cout << "v.size() = " << v.size() << "vt.size() = " << vt.size() << "vn.size() = " << vn.size() << endl;
-			
-            vector<GLint> vIndexSets;
+            }
+            cout << s << endl;
+            cout << "v.size() = " << v.size() << "vt.size() = " << vt.size() << "vn.size() = " << vn.size() << endl;
+			vector<GLint> vIndexSets;
             vector<GLint> vTextureSets;
             vector<GLint> vNormalSets;
 
@@ -52,7 +50,7 @@ ObjLoader::ObjLoader(string filename, Loader loader)
                 GLint vtindex = stoi(words[i * 3 + 2]) >= 0 ? (stoi(words[i * 3 + 2]) - 1) : (stoi(words[i * 3 + 2]) + vt.size());
                 GLint vnindex = stoi(words[i * 3 + 3]) >= 0 ? (stoi(words[i * 3 + 3]) - 1) : (stoi(words[i * 3 + 3]) + vn.size());
 
-                //cout << vindex << " " << vtindex << " " << vnindex << endl;
+                cout << vindex << " " << vtindex << " " << vnindex << endl;
                 vIndexSets.push_back(vindex);
                 vTextureSets.push_back(vtindex);
                 vNormalSets.push_back(vnindex);
@@ -85,7 +83,7 @@ ObjLoader::ObjLoader(string filename, Loader loader)
             s>>x; s>>y;
             texture.push_back(x);
             //存在疑问
-            texture.push_back(1.0 - y);
+            texture.push_back(y);
             vt.push_back(texture);
         }
 	}
