@@ -101,9 +101,9 @@ int main()
 
     //地面的树
     ObjLoader treeLoader = ObjLoader();
-    ModelData treeData = treeLoader.loadObj("../object/tree.obj");
+    ModelData treeData = treeLoader.loadObj("../object/2_tree.obj");
     Model treeModel = loader.LoadToV(treeData.vertices, 3*treeData.numOfVertices, treeData.textureCoords, 2*treeData.numOfVertices, treeData.indices, treeData.numOfIndices, treeData.normals, 3*treeData.numOfVertices);
-    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
+    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/2_tree.png"));
     TexturedModel tree = TexturedModel(treeModel, treeTextureAtlas);
 
     for(int i = 0; i < 400; i++){

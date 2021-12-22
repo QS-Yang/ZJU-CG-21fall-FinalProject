@@ -92,32 +92,28 @@ int main()
     Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
     
     //地面随即加草
-    ObjLoader fernloader = ObjLoader();
-    ModelData ferndata = fernloader.loadObj("../object/fern.obj");
-    Model fernmodel = loader.LoadToV(ferndata.vertices, 3*ferndata.numOfVertices, ferndata.textureCoords, 2*ferndata.numOfVertices, ferndata.indices, ferndata.numOfIndices, ferndata.normals, 3*ferndata.numOfVertices);
+    ObjLoader objloader("../object/fern.obj", loader);
     Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
     fernTextureAtlas.numberOfRows = 2;
-    TexturedModel fern = TexturedModel(fernmodel, fernTextureAtlas);
+    TexturedModel fern = TexturedModel(objloader.Draw(), fernTextureAtlas);
 
     //地面的树
-    ObjLoader treeLoader = ObjLoader();
-    ModelData treeData = treeLoader.loadObj("../object/tree.obj");
-    Model treeModel = loader.LoadToV(treeData.vertices, 3*treeData.numOfVertices, treeData.textureCoords, 2*treeData.numOfVertices, treeData.indices, treeData.numOfIndices, treeData.normals, 3*treeData.numOfVertices);
+    ObjLoader treeLoader("../object/tree.obj", loader);
     Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
-    TexturedModel tree = TexturedModel(treeModel, treeTextureAtlas);
+    TexturedModel tree = TexturedModel(treeLoader.Draw(), treeTextureAtlas);
 
     for(int i = 0; i < 400; i++){
         if(i % 2 == 0){
             float x = random(0, 256);
             float z = random(0, 1000);
             float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.1f));
+            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 1.0f));
         }
         if(i % 5 == 0){
             float x = random(0, 256);
             float z = random(0, 1000);
             float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 5.0f));
+            entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 1.5f));
         }
     }
 
