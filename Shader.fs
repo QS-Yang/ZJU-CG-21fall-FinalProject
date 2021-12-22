@@ -40,9 +40,9 @@ void main()
 	totalDiff = max(totalDiff, 0.2);
 
 	vec4 TexColor = texture(textureSampler, pTexCoord);
-	// if(TexColor.x<0.5){
-	// 	discard;
-	// }
+	if(TexColor.x<0.1){
+		discard;
+	}
 
 	FragColor = vec4(totalDiff, 1.0) * texture(textureSampler, pTexCoord) + vec4(totalSpec, 1.0);
 	FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);

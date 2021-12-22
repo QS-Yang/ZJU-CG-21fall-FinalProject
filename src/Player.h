@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Terrain.h"
 #include "Matrix.h"
+#include <vector>
 
 class Player: public Entity 
 {
@@ -18,6 +19,11 @@ private:
     float upwardsSpeed = 0;
 
     bool isInAir = false;
+
+    vector<glm::vec3> objectPos;
+    float collideSize = 2.5;
+
+    float slope=0;
 
     // void jump() {
     //     this->upwardsSpeed = JUMP_POWER;
@@ -57,13 +63,27 @@ public:
         this->window = window;
     }
 
+    void setCollideObject(vector<glm::vec3> objectPos){
+        this->objectPos = objectPos;
+    }
+
+    float dis(float x1, float z1, float x2, float z2){
+        return sqrt((x1-x2)*(x1-x2)+(z1-z2)*(z1-z2));
+    }
+
     void move(float delta, Terrain terrain) {
         checkInputs();
         Rot(0, currentTurnSpeed * delta, 0);
         float distance = currentSpeed * delta;
         float dx = distance * sin(radians(this->ry));
         float dz = distance * cos(radians(this->ry));
-        Up(dx, 0, dz); 
+        bool collision=false;
+        for(int i=0; i<objectPos.size(); i++){
+            if(dis(position.x+dx, position.z+dz, objectPos[i].x, objectPos[i].z)<collideSize){
+                collision=true;
+            }
+        }
+        if(!collision) Up(dx, 0, dz); 
         //std::cout << this->ry << std::endl;   
         if(this->upwardsSpeed > -JUMP_POWER && this->upwardsSpeed < 0){
             this->upwardsSpeed -= GRAVITY * delta;
@@ -75,6 +95,19 @@ public:
         Up(0, this->upwardsSpeed * delta, 0);
         float terrainHeight = terrain.getHeightOfTerrain(position.x, position.z); 
         this->position.y = terrainHeight;
+
+        if(currentSpeed) {
+            slope =(terrainHeight-terrain.getHeightOfTerrain(position.x-dx*10, position.z-dz*10))/(sqrt(dx*dx*100+dz*dz*100));
+            cout<<dx<<" "<<dz<<endl;
+            if(currentSpeed<0) slope = -slope;
+            cout<<slope<<endl;
+        }
+        float angle = atan(slope)*360/(2*Pi);
+        cout<<angle<<endl;
+        rx = -angle*cos(ry*2*Pi/360.0);
+        rz = angle*sin(ry*2*Pi/360.0)/5.0;
+        // rz = angle;
+        
         // if(this->position.y < terrainHeight){
         //     this->upwardsSpeed = 0;
         //     this->isInAir = false;

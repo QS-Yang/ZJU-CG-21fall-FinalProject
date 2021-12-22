@@ -98,13 +98,19 @@ int main()
     Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
     fernTextureAtlas.numberOfRows = 2;
     TexturedModel fern = TexturedModel(fernmodel, fernTextureAtlas);
+    fern.texture.setHasTransparency(1);
+    fern.texture.setUseFakeLighting(1);
 
     //地面的树
     ObjLoader treeLoader = ObjLoader();
-    ModelData treeData = treeLoader.loadObj("../object/tree.obj");
+    ModelData treeData = treeLoader.loadObj("../object/pine.obj");
     Model treeModel = loader.LoadToV(treeData.vertices, 3*treeData.numOfVertices, treeData.textureCoords, 2*treeData.numOfVertices, treeData.indices, treeData.numOfIndices, treeData.normals, 3*treeData.numOfVertices);
-    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
+    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/pine.png"));
     TexturedModel tree = TexturedModel(treeModel, treeTextureAtlas);
+    tree.texture.setHasTransparency(1);
+    tree.texture.setUseFakeLighting(1);
+
+    vector<glm::vec3> treePos;
 
     for(int i = 0; i < 400; i++){
         if(i % 2 == 0){
@@ -117,7 +123,8 @@ int main()
             float x = random(0, 256);
             float z = random(0, 1000);
             float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 5.0f));
+            entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 1.0f));
+            treePos.push_back(glm::vec3(x, y, z));
         }
     }
 
@@ -145,6 +152,7 @@ int main()
     Ptexture.reflectivity = 1;
     Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.5);
     player.addWindow(window);
+    player.setCollideObject(treePos);
     Camera camera= Camera(window, &player);
     glfwSetScrollCallback(window, scrollFunc);
 
