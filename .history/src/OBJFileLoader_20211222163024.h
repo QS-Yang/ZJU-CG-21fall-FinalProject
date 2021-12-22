@@ -84,7 +84,7 @@ public:
     }
 
     void processVertex(vector<string> vertex){
-        
+        cout << vertices.size() << endl;
         int index = (stoi(vertex[0])-1 >= 0) ? stoi(vertex[0])-1 : stoi(vertex[0]) + vertices.size();
         // Vertex currentVertex = vertices[index];
         int textureIndex = (stoi(vertex[1])-1 >= 0) ? stoi(vertex[1])-1 : stoi(vertex[1]) + textures.size();

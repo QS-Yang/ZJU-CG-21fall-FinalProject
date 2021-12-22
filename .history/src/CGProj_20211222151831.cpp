@@ -129,17 +129,17 @@ int main()
 
     // Player try
     ObjLoader objloader2 = ObjLoader();
-    ModelData pdata = objloader2.loadObj("../object/car.obj");
+    ModelData pdata = objloader2.loadObj("../object/tree.obj");
     Model Pmodel = loader.LoadToV(pdata.vertices, 3*pdata.numOfVertices, pdata.textureCoords, 2*pdata.numOfVertices, pdata.indices, pdata.numOfIndices, pdata.normals, 3*pdata.numOfVertices);
-    Texture Prawtexture=Texture(loader.loadTexture("../texture/Car.png"));
-    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
-    //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
+    //Texture Prawtexture=Texture(loader.loadTexture("../texture/player.png"));
+    //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
+    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
     Ptexturedmodel.texture.setHasTransparency(0);
     Ptexturedmodel.texture.setUseFakeLighting(0);
     Texture Ptexture = Ptexturedmodel.texture;
     Ptexture.shineDamper = 10;
     Ptexture.reflectivity = 1;
-    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.5);
+    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 0.03);
     player.addWindow(window);
     Camera camera= Camera(window, &player);
     glfwSetScrollCallback(window, scrollFunc);

@@ -30,7 +30,7 @@ public:
 
         ifstream file(fileName);
         string line;
-        std::vector<std::vector<std::string> > f_index;
+
         while (getline(file, line)) {
             if (line.substr(0,2) == "v ") {
                 glm::vec3 vertex;
@@ -61,17 +61,12 @@ public:
                 vector<string> v1 = parser(words[1],"/");
                 vector<string> v2 = parser(words[2],"/");
                 vector<string> v3 = parser(words[3],"/");
-                f_index.push_back(v1);
-                f_index.push_back(v2);
-                f_index.push_back(v3);
+
+                processVertex(v1);
+                processVertex(v2);
+                processVertex(v3);
             }    
         } 
-        for(int i = 0; i < f_index.size(); i++) {
-            processVertex(f_index[i]);
-        }
-        // processVertex(v1);
-        // processVertex(v2);
-        // processVertex(v3);
         removeVertices();
         float *verticesArray = new float[vertices.size()*3];
         float *texturesArray = new float[vertices.size()*2];
@@ -84,7 +79,6 @@ public:
     }
 
     void processVertex(vector<string> vertex){
-        
         int index = (stoi(vertex[0])-1 >= 0) ? stoi(vertex[0])-1 : stoi(vertex[0]) + vertices.size();
         // Vertex currentVertex = vertices[index];
         int textureIndex = (stoi(vertex[1])-1 >= 0) ? stoi(vertex[1])-1 : stoi(vertex[1]) + textures.size();
@@ -93,8 +87,7 @@ public:
             vertices[index].setTextureIndex(textureIndex);
             vertices[index].setNormalIndex(normalIndex);
             indices.push_back(index);
-        } 
-        else {
+        } else {
             dealProcessedVertex(&vertices[index], textureIndex, normalIndex);
         }
     }
@@ -130,16 +123,13 @@ public:
     }
 
     void dealProcessedVertex(Vertex *prevVertex, int newTextureIndex, int newNormalIndex){
-
         if(prevVertex->hasSameTextureAndNormal(newTextureIndex, newNormalIndex)){
             indices.push_back(prevVertex->index);
-        } 
-        else {
+        } else {
             Vertex *anotherVertex = prevVertex->duplicateVertex;
             if(anotherVertex != NULL){
                 dealProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex);
-            } 
-            else {
+            } else {
                 Vertex* dupVertex = new Vertex(vertices.size(), prevVertex->position);
                 dupVertex->setTextureIndex(newTextureIndex);
                 dupVertex->setNormalIndex(newNormalIndex);
