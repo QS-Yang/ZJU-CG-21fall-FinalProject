@@ -103,10 +103,9 @@ void ObjLoader::CleanUp()
 }
 
 Model ObjLoader::Draw(){
-    //cout << "v.size() = " << v.size() << "vt.size() = " << vt.size() << "vn.size() = " << vn.size() << endl;
+    cout << "v.size() = " << v.size() << "vt.size() = " << vt.size() << "vn.size() = " << vn.size() << endl;
     GLfloat *textureArray = new GLfloat[2*v.size()]();
-    GLfloat *NormalArray = new GLfloat[3*v.size()]();
-    //cout << "yes" << endl;
+    GLfloat *NormalArray = new GLfloat[3*vn.size()]();
     for(int i=0; i<f.size(); i++){
         for(int j=0; j<f[i].size(); j++){
             textureArray[2*f[i][j]] = vt[fvt[i][j]][0];
@@ -135,7 +134,7 @@ Model ObjLoader::Draw(){
         indices.push_back(f[i][2]);
     }
 
-    Model model = loader.LoadToV((float*)&vertices[0], vertices.size(), textureArray, 2 * v.size(), (int*)&indices[0], indices.size(), NormalArray, 3 * v.size());
+    Model model = loader.LoadToV((float*)&vertices[0], 3*v.size(), textureArray, 2*v.size(), (int*)&indices[0], 3*f.size(), NormalArray, 3*v.size());
     CleanUp();
     return model;
 }

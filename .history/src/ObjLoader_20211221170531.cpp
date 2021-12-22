@@ -135,7 +135,7 @@ Model ObjLoader::Draw(){
         indices.push_back(f[i][2]);
     }
 
-    Model model = loader.LoadToV((float*)&vertices[0], vertices.size(), textureArray, 2 * v.size(), (int*)&indices[0], indices.size(), NormalArray, 3 * v.size());
+    Model model = loader.LoadToV((float*)&vertices[0], vertices.size(), textureArray, 2 * v.size(), (int*)&indices[0], indices.size(), NormalArray, 3 * vn.size());
     CleanUp();
     return model;
 }

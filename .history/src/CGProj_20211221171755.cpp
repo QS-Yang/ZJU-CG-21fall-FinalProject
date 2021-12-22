@@ -5,8 +5,7 @@
 #include "Model.h"
 #include "Loader.h"
 #include "Render.h"
-// #include "ObjLoader.h"
-#include "OBJFileLoader.h"
+#include "ObjLoader.h"
 #include "Texture.h"
 #include "TexturedModel.h"
 #include "stb_image.h"
@@ -77,9 +76,8 @@ int main()
     vector<Entity> entities;
 
     for(int i=0; i<filenames.size(); i++){
-        ObjLoader objloader1 = ObjLoader();
-        ModelData data = objloader1.loadObj("../object/Car2.obj");
-        Model model = loader.LoadToV(data.vertices, 3*data.numOfVertices, data.textureCoords, 2*data.numOfVertices, data.indices, data.numOfIndices, data.normals, 3*data.numOfVertices);
+        ObjLoader Loader = ObjLoader(filenames[i], loader);
+        Model model = Loader.Draw();
         TexturedModel texturedmodel=TexturedModel(model, rawtexture);
         texturedmodel.texture.setHasTransparency(0);
         texturedmodel.texture.setUseFakeLighting(0);
@@ -92,54 +90,53 @@ int main()
     Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
     
     //地面随即加草
-    // ObjLoader objloader("../object/fern.obj", loader);
-    // Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
-    // fernTextureAtlas.numberOfRows = 2;
-    // TexturedModel fern = TexturedModel(objloader.Draw(), fernTextureAtlas);
+    ObjLoader objloader("../object/fern.obj", loader);
+    Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
+    fernTextureAtlas.numberOfRows = 2;
+    TexturedModel fern = TexturedModel(objloader.Draw(), fernTextureAtlas);
 
     //地面的树
-    // ObjLoader treeLoader("../object/tree.obj", loader);
-    // Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
-    // TexturedModel tree = TexturedModel(treeLoader.Draw(), treeTextureAtlas);
+    ObjLoader treeLoader("../object/tree.obj", loader);
+    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/tree.png"));
+    TexturedModel tree = TexturedModel(treeLoader.Draw(), treeTextureAtlas);
 
-    // for(int i = 0; i < 400; i++){
-    //     if(i % 2 == 0){
-    //         float x = random(0, 256);
-    //         float z = random(0, 1000);
-    //         float y = terrain1.getHeightOfTerrain(x, z);
-    //         entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 1.0f));
-    //     }
-    //     if(i % 5 == 0){
-    //         float x = random(0, 256);
-    //         float z = random(0, 1000);
-    //         float y = terrain1.getHeightOfTerrain(x, z);
-    //         entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 1.5f));
-    //     }
-    // }
+    for(int i = 0; i < 400; i++){
+        if(i % 2 == 0){
+            float x = random(0, 256);
+            float z = random(0, 1000);
+            float y = terrain1.getHeightOfTerrain(x, z);
+            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.2f));
+        }
+        if(i % 5 == 0){
+            float x = random(0, 256);
+            float z = random(0, 1000);
+            float y = terrain1.getHeightOfTerrain(x, z);
+            entities.push_back(Entity(tree, 1, glm::vec3(x, y, z), 0, 0, 0, 1.5f));
+        }
+    }
 
-    Light light = Light(glm::vec3(0,1000,-7000), glm::vec3(0.4,0.4,0.4), glm::vec3(1,0,0));
-    vector<Light> lights;
-    lights.push_back(light);
-    lights.push_back(Light(glm::vec3(185,10,-293), glm::vec3(2,0,0), glm::vec3(1, 0.01, 0.002)));
-    lights.push_back(Light(glm::vec3(200,10,200), glm::vec3(0,2,2), glm::vec3(1, 0.01, 0.002)));
-    lights.push_back(Light(glm::vec3(293,7,-305), glm::vec3(2,2,0), glm::vec3(1, 0.01, 0.002)));
+    // Light light = Light(glm::vec3(0,1000,-7000), glm::vec3(0.4,0.4,0.4), glm::vec3(1,0,0));
+    // vector<Light> lights;
+    // lights.push_back(light);
+    // lights.push_back(Light(glm::vec3(185,10,-293), glm::vec3(2,0,0), glm::vec3(1, 0.01, 0.002)));
+    // lights.push_back(Light(glm::vec3(200,10,200), glm::vec3(0,2,2), glm::vec3(1, 0.01, 0.002)));
+    // lights.push_back(Light(glm::vec3(293,7,-305), glm::vec3(2,2,0), glm::vec3(1, 0.01, 0.002)));
 
     
     // Terrain terrain2(1, 0, loader, texturePack, blendMap, "../texture/heightmap.png");
 
     // Player try
-    ObjLoader objloader2 = ObjLoader();
-    ModelData pdata = objloader2.loadObj("../object/LowPolyCars.obj");
-    Model pmodel = loader.LoadToV(pdata.vertices, 3*pdata.numOfVertices, pdata.textureCoords, 2*pdata.numOfVertices, pdata.indices, pdata.numOfIndices, pdata.normals, 3*pdata.numOfVertices);
-    Texture Prawtexture=Texture(loader.loadTexture("../texture/Car.png"));
-    TexturedModel Ptexturedmodel=TexturedModel(pmodel, Prawtexture);
+    ObjLoader PLoader = ObjLoader("../object/car_test.obj", loader);
+    Texture Prawtexture=Texture(loader.loadTexture("../texture/white.png"));
+    Model Pmodel = PLoader.Draw();
+    TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
     //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
     Ptexturedmodel.texture.setHasTransparency(0);
     Ptexturedmodel.texture.setUseFakeLighting(0);
     Texture Ptexture = Ptexturedmodel.texture;
     Ptexture.shineDamper = 10;
     Ptexture.reflectivity = 1;
-    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.0);
+    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 0.03);
     player.addWindow(window);
     Camera camera= Camera(window, &player);
     glfwSetScrollCallback(window, scrollFunc);
@@ -165,7 +162,7 @@ int main()
         for(int i=0;i<entities.size(); i++){
             renderer.processEntity(entities[i]);
         }
-        renderer.render(lights,camera);
+        //renderer.render(lights,camera);
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
