@@ -52,12 +52,12 @@ float VERTEICES[] = {
 class SkyboxRender {
 private:
     std::string TEXTUREFILES[6] = {
-        "../skybox/right.png",
-        "../skybox/left.png",
-        "../skybox/top.png",
-        "../skybox/bottom.png",
-        "../skybox/back.png",
-        "../skybox/front.png"
+        "skybox/right.png",
+        "skybox/left.png",
+        "skybox/top.png",
+        "skybox/bottom.png",
+        "skybox/back.png",
+        "skybox/front.png"
     };
 public:
     Model cube;
@@ -68,7 +68,7 @@ public:
     SkyboxRender(Loader loader, mat4 projectMatrix) {
         cube = loader.LoadToV(VERTEICES, (int)(sizeof(VERTEICES) / sizeof(VERTEICES[0])), 3);
         textureID = loader.loadCubeMap(TEXTUREFILES, 6);
-        shader = SkyboxShader("../sShader.vs", "../sShader.fs");
+        shader = SkyboxShader("sShader.vs", "sShader.fs");
         shader.Start();
         shader.loadProjectMatrix(projectMatrix);
         shader.Stop();

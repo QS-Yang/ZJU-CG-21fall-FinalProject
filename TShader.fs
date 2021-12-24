@@ -5,6 +5,7 @@ in vec3 surNormal;
 in vec3 toLightVector[4];
 in vec3 toCameraVector;
 in float visibility;
+in vec4 shadowCoords;
 
 out vec4 FragColor;
 
@@ -14,6 +15,7 @@ uniform sampler2D rTexture;
 uniform sampler2D gTexture;
 uniform sampler2D bTexture;
 uniform sampler2D blendMap;
+uniform sampler2D shadowMap;
 
 uniform vec3 lightColor[4];
 uniform vec3 attenuation[4];
@@ -23,6 +25,11 @@ uniform vec3 skyColor;
 
 void main()
 {
+	float objectNearestLight = texture(shadowMap, shadowCoords.xy).r;
+	float lightFactor = 1.0;
+	if(shadowCoords.z  > objectNearestLight) {
+		lightFactor = 0.4;
+	}
 	
 	vec4 blendMapColor = texture(blendMap, pTexCoord);
 	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
@@ -33,6 +40,7 @@ void main()
 	vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColor.b;
 
 	vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+	// totalColor = totalColor * shadowCoords.z;
 
 	vec3 unitNormal = normalize(surNormal);
 	vec3 unitVectorToCamera = normalize(toCameraVector);
@@ -54,7 +62,7 @@ void main()
 		totalDiff += (bright * lightColor[i])/attFactor;
 		totalSpec += (dampedFactor * reflectivity *lightColor[i])/attFactor;
 	}
-	totalDiff = max(totalDiff, 0.2);
+	totalDiff = max(totalDiff, 0.2) * lightFactor;
 
 	FragColor = vec4(totalDiff, 1.0) * totalColor + vec4(totalSpec, 1.0);
 	FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);

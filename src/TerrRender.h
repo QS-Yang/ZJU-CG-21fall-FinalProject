@@ -24,7 +24,8 @@ public:
 		shader.Stop();
 	}
 
-	void render(std::vector<Terrain> terrains) {
+	void render(std::vector<Terrain> terrains, mat4 toShadowSpace) {
+		shader.loadToShadowSpaceMatrix(toShadowSpace);
 		for (int i = 0; i < terrains.size(); i++) {
 			prepareTerrain(terrains[i]);
 			loadModelMatrix(terrains[i]);

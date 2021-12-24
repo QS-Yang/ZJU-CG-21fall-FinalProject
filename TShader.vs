@@ -9,18 +9,25 @@ out vec3 surNormal;
 out vec3 toLightVector[4];
 out vec3 toCameraVector;
 out float visibility;
+out vec4 shadowCoords;
 
 uniform mat4 transMatrix;
 uniform mat4 projectMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPos[4];
+
+uniform mat4 toShadowMapSpace;
+
 const float density = 0.001; //雾的浓度
 const float gradient = 0.5; //随距离增加
+
 
 
 void main()
 {
 	vec4 worldPos =transMatrix * vec4(position, 1.0);
+	shadowCoords = toShadowMapSpace * worldPos;
+
 	vec4 positionRelativeToCam = viewMatrix * worldPos;
 	gl_Position = projectMatrix * positionRelativeToCam;
 	pTexCoord = textureCoord; //请勿修改

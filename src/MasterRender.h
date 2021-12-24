@@ -7,6 +7,7 @@
 #include "Render.h"
 #include "TerrRender.h"
 #include "SkyboxRender.h"
+#include "ShadowMasterRender.h"
 #include <vector>
 #include <map>
 
@@ -22,25 +23,29 @@ public:
     float GREEN = 0.5;
     float BLUE = 0.5;
     
-    ShaderProgram shader= ShaderProgram("../Shader.vs", "../Shader.fs");
+    ShaderProgram shader= ShaderProgram("Shader.vs", "Shader.fs");
     //EntityRender renderer = EntityRender(shader);
     EntityRender renderer;
 
     TerrainRender terrainRender;
-    TerrainShader terrainShader = TerrainShader("../TShader.vs", "../TShader.fs");
+    TerrainShader terrainShader = TerrainShader("TShader.vs", "TShader.fs");
 
     std::map<TexturedModel, std::vector<Entity>> entities;
     std::vector<Terrain> terrains;
 
     SkyboxRender skyboxRender;
+    ShadowMasterRenderer shadowMapRenderer;
+    
+    MasterRender(){}
 
-    MasterRender(Loader loader) {
+    MasterRender(Loader loader, Camera cam) {
         glEnable(GL_CULL_FACE);
         glEnable(GL_BACK);
         createProjectMatrix();
         renderer = EntityRender(shader, projectMatrix);
         terrainRender = TerrainRender(terrainShader, projectMatrix);
         skyboxRender = SkyboxRender(loader, projectMatrix);
+        shadowMapRenderer = ShadowMasterRenderer(cam);
     }
 
     void render(vector<Light> lights, Camera camera){
@@ -56,7 +61,7 @@ public:
         terrainShader.loadSkyColor(RED, GREEN, BLUE);
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
-        terrainRender.render(terrains);
+        terrainRender.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
         terrainShader.Stop();
 
         skyboxRender.render(camera);
@@ -82,6 +87,8 @@ public:
         glEnable(GL_DEPTH_TEST);
         glClearColor(RED, GREEN, BLUE, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D, getShadowMap());
         //glClear(GL_COLOR_BUFFER_BIT);
     }
 
@@ -100,8 +107,18 @@ public:
         projectMatrix[3][3] = 0;
     }
 
+    void renderShadowMap(Light sun) {
+        shadowMapRenderer.render(entities, sun);
+        entities.clear();
+    }
+
+    unsigned int getShadowMap() {
+        return shadowMapRenderer.getShadowMap();
+    }
+
     void Clear(){
         shader.Clear();
         terrainShader.Clear();
+        shadowMapRenderer.cleanUp();
     }
 };

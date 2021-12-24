@@ -16,6 +16,8 @@ class ShadowMasterRenderer {
 private:
     int SHADOW_MAP_SIZE = 2048;
 	int flag = 1;
+	float nearPlane = 1.0;
+    float farPlane = 7.5;
 
 
     ShadowBox shadowBox;
@@ -23,9 +25,9 @@ private:
     mat4 projectionMatrix = mat4(1.0f), lightViewMatrix = mat4(1.0f), pvMatrix = mat4(1.0f);
     mat4 offset = createOffset();
     
-    ShadowFrameBuffer shadowFbo = ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
-	ShadowShader shader = ShadowShader("depth.vs", "depth.fs");
-	ShadowEntityRender entityRender = ShadowEntityRender(shader, pvMatrix);
+    ShadowFrameBuffer shadowFbo;
+	ShadowShader shader;
+	ShadowEntityRender entityRender;
     
 
     mat4 createOffset() {
@@ -38,14 +40,11 @@ private:
     void prepare(vec3 lightDirection, ShadowBox box) {
 		updateOrthoProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
 		updateLightViewMatrix(lightDirection, box.getCenter());
-		if(flag) {
-            mat4 matrix = lightViewMatrix;
-			std::cout << matrix[0][0] << " " << matrix[0][1] << " " << matrix[0][2] << std::endl;
-			matrix = projectionMatrix;
-			std::cout << matrix[0][0] << " " << matrix[1][0] << " " << matrix[2][0] << std::endl;
-			flag -= 1;
-		}
-		pvMatrix = lightViewMatrix * projectionMatrix;
+		shadowBox.setLightViewMatrix(lightViewMatrix);
+		// lightViewMatrix = lookAt(lightDirection, vec3(0.0f), vec3(0.0, 1.0, 0.0));
+		// projectionMatrix = ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 7.5f);
+		pvMatrix = projectionMatrix * lightViewMatrix;
+		entityRender.setpvMatrix(pvMatrix);
 		shadowFbo.bindFrameBuffer();
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -81,7 +80,11 @@ public:
     ShadowMasterRenderer(){}
 
     ShadowMasterRenderer(Camera camera) {
+		shader = ShadowShader("depth.vs", "depth.fs");
         shadowBox = ShadowBox(lightViewMatrix, camera);
+		shadowFbo = ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+		entityRender = ShadowEntityRender(shader, pvMatrix);
+		std::cout << "create a shadowMasterRender" << std::endl;
     }
 
     void render(std::map<TexturedModel, std::vector<Entity>> entities, Light sun) {
@@ -89,6 +92,7 @@ public:
 		vec3 sunPosition = sun.pos;
 		vec3 lightDirection = vec3(-sunPosition.x, -sunPosition.y, -sunPosition.z);
 		prepare(lightDirection, shadowBox);
+		//prepare(sunPosition, shadowBox);
 		entityRender.render(entities);
 		finish();
 	}

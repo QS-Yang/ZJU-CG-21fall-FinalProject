@@ -33,6 +33,7 @@ public:
 
     Player *player;
 
+    Camera(){}
     Camera(GLFWwindow* window, Player *player){
         this->window = window;
         this->player = player;

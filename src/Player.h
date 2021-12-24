@@ -98,12 +98,12 @@ public:
 
         if(currentSpeed) {
             slope =(terrainHeight-terrain.getHeightOfTerrain(position.x-dx*10, position.z-dz*10))/(sqrt(dx*dx*100+dz*dz*100));
-            cout<<dx<<" "<<dz<<endl;
+            //cout<<dx<<" "<<dz<<endl;
             if(currentSpeed<0) slope = -slope;
-            cout<<slope<<endl;
+            //cout<<slope<<endl;
         }
         float angle = atan(slope)*360/(2*Pi);
-        cout<<angle<<endl;
+        //cout<<angle<<endl;
         rx = -angle*cos(ry*2*Pi/360.0);
         rz = angle*sin(ry*2*Pi/360.0)/5.0;
         // rz = angle;
