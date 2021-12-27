@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 
 in vec2 pTexCoord;
 in vec3 surNormal;
@@ -23,14 +23,27 @@ uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
 
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 shadowCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    shadowCoords = shadowCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, shadowCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = shadowCoords.z;
+    // check whether current frag pos is in shadow
+    float bias = 0.001;
+	float shadow = currentDepth - bias > closestDepth  ? 0.4 : 1.0; 
+    
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+
+    return shadow;
+}
+
 void main()
 {
-	float objectNearestLight = texture(shadowMap, shadowCoords.xy).r;
-	float lightFactor = 1.0;
-	if(shadowCoords.z  > objectNearestLight) {
-		lightFactor = 0.4;
-	}
-	
 	vec4 blendMapColor = texture(blendMap, pTexCoord);
 	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
 	vec2 tiledCoords = pTexCoord * 40.0;
@@ -62,9 +75,10 @@ void main()
 		totalDiff += (bright * lightColor[i])/attFactor;
 		totalSpec += (dampedFactor * reflectivity *lightColor[i])/attFactor;
 	}
+	float lightFactor = ShadowCalculation(shadowCoords);
 	totalDiff = max(totalDiff, 0.2) * lightFactor;
 
-	FragColor = vec4(totalDiff, 1.0) * totalColor + vec4(totalSpec, 1.0);
-	FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);
+	 FragColor = vec4(totalDiff, 1.0) * totalColor + vec4(totalSpec, 1.0);
+	 FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);
 	// FragColor = texture(textureSampler, pTexCoord);
 }
