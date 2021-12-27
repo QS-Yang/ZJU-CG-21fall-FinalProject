@@ -91,6 +91,7 @@ public:
 
 		glValidateProgram(programID);
 		getAllUniformLocations();
+		std::cout << "location_shadowMap: " << location_shadowMap << std::endl;
 	}
 
 	void Start() {
@@ -136,7 +137,7 @@ public:
 		location_bTexture = getUniformLocation("bTexture");
 		location_blendMap = getUniformLocation("blendMap");
 		location_toShadowMapSpace = getUniformLocation("toShadowMapSpace");
-		location_shadowMap = getUniformLocation("location_shadowMap");
+		location_shadowMap = getUniformLocation("shadowMap");
 	}
 
 	void connectTextureUnits() {

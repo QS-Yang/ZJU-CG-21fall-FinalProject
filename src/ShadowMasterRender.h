@@ -37,12 +37,13 @@ private:
         return offset;
     }
 
-    void prepare(vec3 lightDirection, ShadowBox box) {
-		updateOrthoProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
-		updateLightViewMatrix(lightDirection, box.getCenter());
+    void prepare(vec3 lightDirection) {
+		lightViewMatrix = lookAt(lightDirection, vec3(0.0f), vec3(0.0, 1.0, 0.0));
 		shadowBox.setLightViewMatrix(lightViewMatrix);
-		// lightViewMatrix = lookAt(lightDirection, vec3(0.0f), vec3(0.0, 1.0, 0.0));
-		// projectionMatrix = ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 7.5f);
+		shadowBox.update();
+		updateOrthoProjectionMatrix(shadowBox.getWidth(), shadowBox.getHeight(), shadowBox.getLength());
+		//updateLightViewMatrix(lightDirection, shadowBox.getCenter());
+		//projectionMatrix = ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 7.5f);
 		pvMatrix = projectionMatrix * lightViewMatrix;
 		entityRender.setpvMatrix(pvMatrix);
 		shadowFbo.bindFrameBuffer();
@@ -88,11 +89,11 @@ public:
     }
 
     void render(std::map<TexturedModel, std::vector<Entity>> entities, Light sun) {
-		shadowBox.update();
+		//shadowBox.update();
 		vec3 sunPosition = sun.pos;
 		vec3 lightDirection = vec3(-sunPosition.x, -sunPosition.y, -sunPosition.z);
-		prepare(lightDirection, shadowBox);
-		//prepare(sunPosition, shadowBox);
+		//prepare(lightDirection, shadowBox);
+		prepare(sunPosition);
 		entityRender.render(entities);
 		finish();
 	}
@@ -105,6 +106,10 @@ public:
     void cleanUp() {
 		shader.Clear();
 		shadowFbo.cleanup();
+	}
+
+	void updateCam(Camera cam){
+		shadowBox.setCam(cam);
 	}
 
 	unsigned int getShadowMap() {

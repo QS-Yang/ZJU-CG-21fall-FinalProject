@@ -31,6 +31,7 @@ private:
 	int offsetLocation;
 	
     int mvpMatrixLocation;
+	int flag = 10;
 
 	unsigned int loadShader(int type, const char* Path) {
 		std::string Code;
@@ -193,5 +194,18 @@ public:
 
     void loadMvpMatrix(mat4 mvpMatrix){
 		loadMatrix(mvpMatrixLocation, mvpMatrix);
+		// if(flag) {
+        //     mat4 matrix = mvpMatrix;
+		// 	std::cout << "entity:" << std::endl;
+		// 	std::cout << matrix[0][0] << " " << matrix[0][1] << " " << matrix[0][2] << " " << matrix[0][3] << std::endl;
+		// 	std::cout << matrix[1][0] << " " << matrix[1][1] << " " << matrix[1][2] << " " << matrix[1][3] << std::endl;
+        //     std::cout << matrix[2][0] << " " << matrix[2][1] << " " << matrix[2][2] << " " << matrix[2][3] << std::endl;
+        //     std::cout << matrix[3][0] << " " << matrix[3][1] << " " << matrix[3][2] << " " << matrix[3][3] << std::endl;
+		// 	flag -= 1;
+		// }
+	}
+
+	int getID(){
+		return programID;
 	}
 };

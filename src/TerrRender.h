@@ -11,6 +11,8 @@ class TerrainRender {
 
 private:
 	TerrainShader shader;
+	mat4 spaceM;
+	int flag = 1;
 
 public:
 	TerrainRender() {
@@ -25,6 +27,7 @@ public:
 	}
 
 	void render(std::vector<Terrain> terrains, mat4 toShadowSpace) {
+		spaceM = toShadowSpace;
 		shader.loadToShadowSpaceMatrix(toShadowSpace);
 		for (int i = 0; i < terrains.size(); i++) {
 			prepareTerrain(terrains[i]);
@@ -61,6 +64,8 @@ public:
 		glBindTexture(GL_TEXTURE_2D, texturePack.getBTexture().getTextureID());
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, terrain.blendMap.getTextureID());
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, terrain.shadowMap);
 	}
 
 	void unbindTextureModel() {
@@ -74,4 +79,7 @@ public:
 		mat4 transMatrix = createTransMatirx(vec3(terrain.x, 0, terrain.z), 0, 0, 0, 1);
 		shader.loadTransMatrix(transMatrix);
 	}
+
+
+
 };

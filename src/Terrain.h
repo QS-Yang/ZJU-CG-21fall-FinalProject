@@ -24,6 +24,7 @@ public:
 	Model model;
 	TerrainTexturePack texturePack;
 	TerrainTexture blendMap;
+	unsigned int shadowMap;
 
 	float **heights;
 
@@ -33,6 +34,11 @@ public:
 		this->x = gridX * SIZE;
 		this->z = gridZ * SIZE;
 		this->model = GenTerrain(loader, heightMap);
+		this->shadowMap = 0;
+	}
+
+	void bindShadowMap(unsigned int ShadowMapID){
+		shadowMap = ShadowMapID;
 	}
 
 	float getHeightOfTerrain(float worldX, float worldZ){
@@ -63,7 +69,7 @@ public:
 		int nrChannels;
 		unsigned char* data = stbi_load(heightMap.c_str(), &width, &height, &nrChannels, 0);
 
-		int VERTEX_COUNT = height;
+		int VERTEX_COUNT = height; 
 		heights = new float*[VERTEX_COUNT];
 		for(int i=0;i<VERTEX_COUNT;i++){
 			heights[i] = new float[VERTEX_COUNT];

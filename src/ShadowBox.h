@@ -132,6 +132,10 @@ public:
 		lightViewMatrix = Matrix;
 	}
 
+	void setCam(Camera c){
+		cam = c;
+	}
+
     vec3 getCenter() {
         float x = (minX + maxX) / 2.0f;
 		float y = (minY + maxY) / 2.0f;

@@ -129,7 +129,7 @@ int main()
         }
     }
 
-    Light light = Light(glm::vec3(10000,10000,-7000), glm::vec3(1.0,1.0,1.0), glm::vec3(1,0,0));
+    Light light = Light(glm::vec3(1000,1000,-1000), glm::vec3(1.0,1.0,1.0), glm::vec3(1,0,0));
     vector<Light> lights;
     lights.push_back(light);
     // lights.push_back(Light(glm::vec3(185,10,-293), glm::vec3(2,0,0), glm::vec3(1, 0.01, 0.002)));
@@ -159,6 +159,7 @@ int main()
 
     // render loop
     MasterRender renderer = MasterRender(loader, camera);
+    renderer.prepareShadowFBO();
     std::cout << "MasterRender OK" << std::endl;
     int flag = 1;
     while (!glfwWindowShouldClose(window))
@@ -173,6 +174,8 @@ int main()
         player.move(deltaTime, terrain1);
         camera.distanceFromPlayer = fov;
         camera.move();
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         renderer.processEntity(player);
         // renderer.processTerrain(terrain2);
@@ -181,7 +184,7 @@ int main()
         }
         renderer.renderShadowMap(lights[0]);
 
-
+        terrain1.bindShadowMap(renderer.depthMap);
         renderer.processEntity(player);
         renderer.processTerrain(terrain1);
         // renderer.processTerrain(terrain2);
