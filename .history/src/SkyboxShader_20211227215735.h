@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "skybox.h"
 #include "Shader.h"
 
 class SkyboxShader {
@@ -9,12 +10,6 @@ private:
 	unsigned int fragmentShaderID;
     unsigned int projectMatrixLocation;
     unsigned int viewMatrixLocation;
-
-	unsigned int frogColorLocation; 
-	double lastTime = glfwGetTime();
-	double deltaTime = 0;
-	float rotation = 0;
-
     unsigned int loadShader(int type, const char* Path) {
 		std::string Code;
 		std::ifstream ShaderFile;
@@ -90,19 +85,10 @@ public:
 		//printf("%d\n", frogColorLocation);
 		glUniform3f(frogColorLocation, color.x, color.y, color.z);
 	}
-
+	
 	void loadViewMatrix(Camera camera) {
 		mat4 viewMatrix = createViewMatrix(camera);
 		mat4 view =  glm::mat4(glm::mat3(viewMatrix));
-
-		// - Measure time
-		double nowTime = glfwGetTime();
-		deltaTime += (nowTime - lastTime) / 1000.0;
-		lastTime = nowTime;
-		rotation += 1.0f * deltaTime;
-		//rotate view matrix
-		view = glm::rotate(view, glm::radians(rotation), vec3(0.0f, 1.0f, 0.0f));
-
 		loadMatrix(viewMatrixLocation, view);
 	}
 
@@ -113,7 +99,6 @@ public:
 	void getAllUniformLocations() {
 		projectMatrixLocation = glGetUniformLocation(programID, "projectionMatrix");
 		viewMatrixLocation = glGetUniformLocation(programID, "viewMatrix");
-		frogColorLocation = glGetUniformLocation(programID, "fogColor");
 	}
 
 	void BindAttrib() {

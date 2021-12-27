@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "skybox.h"
 #include "Shader.h"
 
 class SkyboxShader {

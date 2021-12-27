@@ -226,10 +226,10 @@ float getCurrentTime() {
 }
 
 void scrollFunc(GLFWwindow* window, double xoffset, double yoffset){
-    if (fov >= 1.0f && fov <= 90.0f) {
+    if (fov >= 1.0f && fov <= 45.0f) {
         fov -= yoffset;
     }
 
     fov = fov <= 1.0f ? 1.0f : fov;
-    fov = fov >= 90.0f ? 90.0f : fov;
+    fov = fov >= 45.0f ? 45.0f : fov;
 }

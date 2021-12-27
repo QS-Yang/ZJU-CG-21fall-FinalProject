@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "skybox.h"
 #include "Shader.h"
 
 class SkyboxShader {
@@ -102,7 +103,7 @@ public:
 		rotation += 1.0f * deltaTime;
 		//rotate view matrix
 		view = glm::rotate(view, glm::radians(rotation), vec3(0.0f, 1.0f, 0.0f));
-
+		
 		loadMatrix(viewMatrixLocation, view);
 	}
 
@@ -113,7 +114,6 @@ public:
 	void getAllUniformLocations() {
 		projectMatrixLocation = glGetUniformLocation(programID, "projectionMatrix");
 		viewMatrixLocation = glGetUniformLocation(programID, "viewMatrix");
-		frogColorLocation = glGetUniformLocation(programID, "fogColor");
 	}
 
 	void BindAttrib() {

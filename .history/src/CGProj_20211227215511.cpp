@@ -151,7 +151,7 @@ int main()
     Texture Ptexture = Ptexturedmodel.texture;
     Ptexture.shineDamper = 10;
     Ptexture.reflectivity = 1;
-    Player player = Player(Ptexturedmodel, 1, glm::vec3(400, 0, 400), 0, 0, 0, 1.5);
+    Player player = Player(Ptexturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.5);
     player.addWindow(window);
     player.setCollideObject(treePos);
     Camera camera= Camera(window, &player);
@@ -226,10 +226,10 @@ float getCurrentTime() {
 }
 
 void scrollFunc(GLFWwindow* window, double xoffset, double yoffset){
-    if (fov >= 1.0f && fov <= 90.0f) {
+    if (fov >= 1.0f && fov <= 45.0f) {
         fov -= yoffset;
     }
 
     fov = fov <= 1.0f ? 1.0f : fov;
-    fov = fov >= 90.0f ? 90.0f : fov;
+    fov = fov >= 45.0f ? 45.0f : fov;
 }

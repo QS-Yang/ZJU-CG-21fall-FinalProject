@@ -79,8 +79,6 @@ public:
         shader.Start();
         shader.setInt("cubeMap", 0);
         shader.loadViewMatrix(camera);
-        shader.loadFogColor(color);
-        
         glBindVertexArray(cube.Vid);
         glEnableVertexAttribArray(0);
         glActiveTexture(GL_TEXTURE0);
