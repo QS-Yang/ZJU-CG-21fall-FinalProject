@@ -7,7 +7,6 @@
 #include "Render.h"
 #include "TerrRender.h"
 #include "SkyboxRender.h"
-#include "ShadowMasterRender.h"
 #include "ShadowShader.h"
 #include "ShadowEntityRender.h"
 #include <vector>
@@ -24,7 +23,6 @@ public:
     float RED = 0.5;
     float GREEN = 0.5;
     float BLUE = 0.5;
-    int flag = 1;
 
     const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
     unsigned int depthMapFBO;
@@ -45,7 +43,6 @@ public:
     std::vector<Terrain> terrains;
 
     SkyboxRender skyboxRender;
-    ShadowMasterRenderer shadowMapRenderer;
     
     MasterRender(){}
 
@@ -72,16 +69,6 @@ public:
         terrainShader.loadSkyColor(RED, GREEN, BLUE);
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
-        if(flag) {
-			std::cout << "pvm:";
-            mat4 matrix = projectMatrix * createViewMatrix(camera);
-			std::cout << std::endl;
-			std::cout << matrix[0][0] << " " << matrix[0][1] << " " << matrix[0][2] << " " << matrix[0][3] << std::endl;
-			std::cout << matrix[1][0] << " " << matrix[1][1] << " " << matrix[1][2] << " " << matrix[1][3] << std::endl;
-            std::cout << matrix[2][0] << " " << matrix[2][1] << " " << matrix[2][2] << " " << matrix[2][3] << std::endl;
-            std::cout << matrix[3][0] << " " << matrix[3][1] << " " << matrix[3][2] << " " << matrix[3][3] << std::endl;
-			flag -= 1;
-		}
         //terrainRender.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
         terrainRender.render(terrains, lightSpaceMatrix);
         terrainShader.Stop();
@@ -151,10 +138,6 @@ public:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    unsigned int getShadowMap() {
-        return shadowMapRenderer.getShadowMap();
-    }
-
     void prepareShadowFBO() {
         glGenFramebuffers(1, &depthMapFBO);
         // create depth texture
@@ -178,13 +161,8 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void updateCamera(Camera cam) {
-        shadowMapRenderer.updateCam(cam);
-    }
-
     void Clear(){
         shader.Clear();
         terrainShader.Clear();
-        shadowMapRenderer.cleanUp();
     }
 };

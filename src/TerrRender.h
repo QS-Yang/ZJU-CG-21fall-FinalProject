@@ -12,7 +12,6 @@ class TerrainRender {
 private:
 	TerrainShader shader;
 	mat4 spaceM;
-	int flag = 1;
 
 public:
 	TerrainRender() {

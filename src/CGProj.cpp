@@ -160,8 +160,6 @@ int main()
     // render loop
     MasterRender renderer = MasterRender(loader, camera);
     renderer.prepareShadowFBO();
-    std::cout << "MasterRender OK" << std::endl;
-    int flag = 1;
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic

@@ -1,11 +1,7 @@
-#version 400 core
-
-out vec4 out_colour;
-
-uniform sampler2D modelTexture;//will use this next week
+#version 330 core
 
 void main(void){
 
-	out_colour = vec4(1.0);
+	//out_colour = vec4(1.0);
 	
 }

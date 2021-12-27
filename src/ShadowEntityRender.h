@@ -14,12 +14,10 @@ class ShadowEntityRender {
 private:
     mat4 projectionViewMatrix;
     ShadowShader shader;
-	int flag = 10;
 
 public:
 	ShadowEntityRender() {}
     ShadowEntityRender(ShadowShader shader, mat4 pvMatrix) {
-		std::cout << "program id: " << shader.getID() << std::endl;
         this->shader = shader;
         this->projectionViewMatrix = pvMatrix;
     }
