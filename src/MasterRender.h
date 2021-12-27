@@ -28,14 +28,14 @@ public:
     unsigned int depthMapFBO;
     unsigned int depthMap;
     
-    ShaderProgram shader= ShaderProgram("Shader.vs", "Shader.fs");
+    ShaderProgram shader= ShaderProgram("../Shader.vs", "../Shader.fs");
     //EntityRender renderer = EntityRender(shader);
     EntityRender renderer;
 
     TerrainRender terrainRender;
-    TerrainShader terrainShader = TerrainShader("TShader.vs", "TShader.fs");
+    TerrainShader terrainShader = TerrainShader("../TShader.vs", "../TShader.fs");
 
-    ShadowShader shadowShader = ShadowShader("depth.vs", "depth.fs");
+    ShadowShader shadowShader = ShadowShader("../depth.vs", "../depth.fs");
     mat4 lightSpaceMatrix = mat4(1.0f);
     ShadowEntityRender shadowRender;
 

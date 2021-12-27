@@ -64,22 +64,22 @@ int main()
     //Render
     Loader loader;
     //Load Texture of Terrain
-    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("texture/grass.png"));
-    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("texture/mud.png"));
-    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("texture/path.png"));
+    TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("../texture/grass.png"));
+    TerrainTexture rTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture gTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
+    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("../texture/path.png"));
 
     TerrainTexturePack texturePack(backgroundTexture, rTexture, gTexture, bTexture);
-    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("texture/blendMap.png"));
+    TerrainTexture blendMap = TerrainTexture(loader.loadTexture("../texture/blendMap.png"));
     //
-    vector<string> filenames{"object/Car2.obj"};
-    Texture rawtexture=Texture(loader.loadTexture("texture/white.png"));
+    vector<string> filenames{"../object/Car2.obj"};
+    Texture rawtexture=Texture(loader.loadTexture("../texture/white.png"));
 
     vector<Entity> entities;
 
     for(int i=0; i<filenames.size(); i++){
         ObjLoader objloader1 = ObjLoader();
-        ModelData data = objloader1.loadObj("object/Car2.obj");
+        ModelData data = objloader1.loadObj("../object/Car2.obj");
         Model model = loader.LoadToV(data.vertices, 3*data.numOfVertices, data.textureCoords, 2*data.numOfVertices, data.indices, data.numOfIndices, data.normals, 3*data.numOfVertices);
         TexturedModel texturedmodel=TexturedModel(model, rawtexture);
         texturedmodel.texture.setHasTransparency(0);
@@ -90,13 +90,13 @@ int main()
         entities.push_back(Entity(texturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.0));
     }
 
-    Terrain terrain1(1, 1, loader, texturePack, blendMap, "texture/heightmap.png");
+    Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
     
     //地面随即加草
     ObjLoader fernloader = ObjLoader();
-    ModelData ferndata = fernloader.loadObj("object/fern.obj");
+    ModelData ferndata = fernloader.loadObj("../object/fern.obj");
     Model fernmodel = loader.LoadToV(ferndata.vertices, 3*ferndata.numOfVertices, ferndata.textureCoords, 2*ferndata.numOfVertices, ferndata.indices, ferndata.numOfIndices, ferndata.normals, 3*ferndata.numOfVertices);
-    Texture fernTextureAtlas = Texture(loader.loadTexture("texture/fern.png"));
+    Texture fernTextureAtlas = Texture(loader.loadTexture("../texture/fern.png"));
     fernTextureAtlas.numberOfRows = 2;
     TexturedModel fern = TexturedModel(fernmodel, fernTextureAtlas);
     fern.texture.setHasTransparency(1);
@@ -104,9 +104,9 @@ int main()
 
     //地面的树
     ObjLoader treeLoader = ObjLoader();
-    ModelData treeData = treeLoader.loadObj("object/pine.obj");
+    ModelData treeData = treeLoader.loadObj("../object/pine.obj");
     Model treeModel = loader.LoadToV(treeData.vertices, 3*treeData.numOfVertices, treeData.textureCoords, 2*treeData.numOfVertices, treeData.indices, treeData.numOfIndices, treeData.normals, 3*treeData.numOfVertices);
-    Texture treeTextureAtlas = Texture(loader.loadTexture("texture/pine.png"));
+    Texture treeTextureAtlas = Texture(loader.loadTexture("../texture/pine.png"));
     TexturedModel tree = TexturedModel(treeModel, treeTextureAtlas);
     tree.texture.setHasTransparency(1);
     tree.texture.setUseFakeLighting(1);
@@ -141,9 +141,9 @@ int main()
 
     // Player try
     ObjLoader objloader2 = ObjLoader();
-    ModelData pdata = objloader2.loadObj("object/car.obj");
+    ModelData pdata = objloader2.loadObj("../object/car.obj");
     Model Pmodel = loader.LoadToV(pdata.vertices, 3*pdata.numOfVertices, pdata.textureCoords, 2*pdata.numOfVertices, pdata.indices, pdata.numOfIndices, pdata.normals, 3*pdata.numOfVertices);
-    Texture Prawtexture=Texture(loader.loadTexture("texture/Car.png"));
+    Texture Prawtexture=Texture(loader.loadTexture("../texture/Car.png"));
     TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
     //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
     Ptexturedmodel.texture.setHasTransparency(0);
