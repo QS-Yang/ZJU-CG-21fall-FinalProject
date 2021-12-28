@@ -22,6 +22,8 @@ private:
 	int lightPosLocation[MAX_LIGHTS];
 	int lightColorLocation[MAX_LIGHTS];
 	int attenuationLocation[MAX_LIGHTS]={0};
+	int lightDirectionLocation[MAX_LIGHTS]={0};
+	int lightCutoffLocation[MAX_LIGHTS]={0};
 	int shineDamperLocation;
 	int reflectLocation;
 	int skyColorLocation;
@@ -128,6 +130,8 @@ public:
 			lightPosLocation[i] = getUniformLocation("lightPos[" + to_string(i) + "]");
 			lightColorLocation[i] = getUniformLocation("lightColor["+ to_string(i) + "]");
 			attenuationLocation[i] = getUniformLocation("attenuation[" + to_string(i)+ "]");
+			lightDirectionLocation[i] = getUniformLocation("lightDirection[" + to_string(i) + "]");
+			lightCutoffLocation[i] = getUniformLocation("lightCutoff[" + to_string(i) + "]");
 		}
 
 		//check写对没有
@@ -171,11 +175,15 @@ public:
 			if(i < lights.size()){
 				loadVector(lightPosLocation[i], lights[i].pos);
 				loadVector(lightColorLocation[i], lights[i].color);
-				loadVector(attenuationLocation[i], lights[i].attenuation); 
+				loadVector(attenuationLocation[i], lights[i].attenuation);
+				loadVector(lightDirectionLocation[i], lights[i].direction);
+				loadFloat(lightCutoffLocation[i], lights[i].cutOff); 
 			}else{
 				loadVector(lightPosLocation[i], vec3(0, 0, 0));
 				loadVector(lightColorLocation[i], vec3(0, 0, 0));
 				loadVector(attenuationLocation[i], vec3(1, 0, 0));
+				loadVector(lightDirectionLocation[i], vec3(0, 0, 0));
+				loadFloat(lightCutoffLocation[i], 0);
 			}
 		}
 	}

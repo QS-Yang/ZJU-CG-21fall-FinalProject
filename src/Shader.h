@@ -29,6 +29,8 @@ private:
 	int skyColorLocation;
 	int numberOfRowsLocation;
 	int offsetLocation;
+	int lightDirectionLocation[MAX_LIGHTS]={0};
+	int lightCutoffLocation[MAX_LIGHTS]={0};
 
 	unsigned int loadShader(int type, const char* Path) {
 		std::string Code;
@@ -126,6 +128,8 @@ public:
 			lightColorLocation[i] = getUniformLocation("lightColor["+ to_string(i) + "]");
 			attenuationLocation[i] = getUniformLocation("attenuation[" + to_string(i)+ "]");
 			lightPosLocation[i] = getUniformLocation("lightPos[" + to_string(i) + "]");
+			lightDirectionLocation[i] = getUniformLocation("lightDirection[" + to_string(i) + "]");
+			lightCutoffLocation[i] = getUniformLocation("lightCutoff[" + to_string(i) + "]");
 		}
 	}
 
@@ -160,10 +164,14 @@ public:
 				loadVector(attenuationLocation[i], lights[i].attenuation); //load attenuation
 				loadVector(lightPosLocation[i], lights[i].pos);
 				loadVector(lightColorLocation[i], lights[i].color);
+				loadVector(lightDirectionLocation[i], lights[i].direction);
+				loadFloat(lightCutoffLocation[i], lights[i].cutOff);
 			}else{
 				loadVector(attenuationLocation[i], vec3(1, 0, 0)); //load attenuation
 				loadVector(lightPosLocation[i], vec3(0, 0, 0));
 				loadVector(lightColorLocation[i], vec3(0, 0, 0));
+				loadVector(lightDirectionLocation[i], vec3(0, 0, 0));
+				loadFloat(lightCutoffLocation[i], 0);
 			}
 		}
 	}

@@ -22,6 +22,8 @@ uniform vec3 attenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
+uniform vec3 lightDirection[4];
+uniform float lightCutoff[4];
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -72,8 +74,12 @@ void main()
 		float specFactor = dot(reflectDir, unitVectorToCamera);
 		specFactor = max(specFactor, 0);
 		float dampedFactor = pow(specFactor, shineDamper);
-		totalDiff += (bright * lightColor[i])/attFactor;
-		totalSpec += (dampedFactor * reflectivity *lightColor[i])/attFactor;
+		
+		float theta = dot(lightDir, normalize(-lightDirection[i]));
+		if(theta < lightCutoff[i] ){
+			totalDiff += (bright * lightColor[i])/attFactor;
+			totalSpec += (dampedFactor * reflectivity *lightColor[i])/attFactor;
+		}
 	}
 	float lightFactor = ShadowCalculation(shadowCoords);
 	totalDiff = max(totalDiff, 0.2) * lightFactor;

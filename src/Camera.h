@@ -39,7 +39,7 @@ public:
         this->player = player;
     }
 
-    void move(){
+    void move(Terrain terrain){
         // if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         //     position.z-=Step;
         // }
@@ -54,7 +54,7 @@ public:
         // }
         flushmouse();
         // calculateZoom();
-        calculatePitch();
+        calculatePitch(terrain);
         calculateAngleAroundPlayer();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
@@ -67,10 +67,14 @@ public:
     //     distanceFromPlayer -= zoomLevel;
     // }
 
-    void calculatePitch(){
+    void calculatePitch(Terrain terrain){
         if(glfwGetMouseButton(window, 0)==GLFW_PRESS){
             float pitchChange = yoffset * 0.1;
             pitch -= pitchChange;
+            // float terrainHeight = terrain.getHeightOfTerrain(position.x, position.z); 
+            // if(terrainHeight+1<player->position.y+distanceFromPlayer * sin(pitch*2*Pi/360.0)&&terrainHeight<position.y){
+            //     pitch -= pitchChange;
+            // }
         }
     }
 

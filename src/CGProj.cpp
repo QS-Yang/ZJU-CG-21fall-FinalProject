@@ -129,7 +129,7 @@ int main()
         }
     }
 
-    Light light = Light(glm::vec3(1000,1000,-1000), glm::vec3(1.0,1.0,1.0), glm::vec3(1,0,0));
+    Light light = Light(glm::vec3(1000,1000,-1000), glm::vec3(1.0,1.0,1.0), glm::vec3(1,0,0), glm::vec3(0,0,0), 10000.0);
     vector<Light> lights;
     lights.push_back(light);
     // lights.push_back(Light(glm::vec3(185,10,-293), glm::vec3(2,0,0), glm::vec3(1, 0.01, 0.002)));
@@ -153,9 +153,13 @@ int main()
     Ptexture.reflectivity = 1;
     Player player = Player(Ptexturedmodel, 1, glm::vec3(400, 0, 400), 0, 0, 0, 1.5);
     player.addWindow(window);
+    Light carLight = Light(glm::vec3(400, 0, 400), glm::vec3(1,1,1), glm::vec3(1, 0.1, 0.02), glm::vec3(1,0,0), -0.9);
+    player.setLight(&carLight);
     player.setCollideObject(treePos);
     Camera camera= Camera(window, &player);
     glfwSetScrollCallback(window, scrollFunc);
+
+    lights.push_back(carLight);
 
     // render loop
     MasterRender renderer = MasterRender(loader, camera);
@@ -170,8 +174,10 @@ int main()
 
         processInput(window);
         player.move(deltaTime, terrain1);
+        lights[1]=*player.light;
+        // cout<<lights[0].cutOff<<endl;
         camera.distanceFromPlayer = fov;
-        camera.move();
+        camera.move(terrain1);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -189,6 +195,10 @@ int main()
         for(int i=0;i<entities.size(); i++){
             renderer.processEntity(entities[i]);
         }
+        // lights[0].pos.x = player.position.x;
+        // lights[0].pos.z = player.position.z;
+        // lights[0].pos.y = 2;
+        // cout<<lights[1].pos.x<<" "<<lights[1].pos.z<<endl;
         renderer.render(lights,camera);
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
