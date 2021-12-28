@@ -24,8 +24,8 @@ void processInput(GLFWwindow* window);
 void scrollFunc(GLFWwindow* window, double offsetx, double offsety);
 
 //窗口设置
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1080;
+const unsigned int SCR_HEIGHT = 720;
 const unsigned int FPS_CAP = 120;
 
 // timing
@@ -44,7 +44,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //glfw创建窗口
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Silent Forest", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -67,29 +67,12 @@ int main()
     TerrainTexture backgroundTexture = TerrainTexture(loader.loadTexture("../texture/grass.png"));
     TerrainTexture rTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
     TerrainTexture gTexture = TerrainTexture(loader.loadTexture("../texture/mud.png"));
-    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("../texture/path.png"));
+    TerrainTexture bTexture = TerrainTexture(loader.loadTexture("../texture/stone.png"));
 
     TerrainTexturePack texturePack(backgroundTexture, rTexture, gTexture, bTexture);
     TerrainTexture blendMap = TerrainTexture(loader.loadTexture("../texture/blendMap.png"));
-    //
-    vector<string> filenames{"../object/Car2.obj"};
-    Texture rawtexture=Texture(loader.loadTexture("../texture/white.png"));
 
     vector<Entity> entities;
-
-    for(int i=0; i<filenames.size(); i++){
-        ObjLoader objloader1 = ObjLoader();
-        ModelData data = objloader1.loadObj("../object/Car2.obj");
-        Model model = loader.LoadToV(data.vertices, 3*data.numOfVertices, data.textureCoords, 2*data.numOfVertices, data.indices, data.numOfIndices, data.normals, 3*data.numOfVertices);
-        TexturedModel texturedmodel=TexturedModel(model, rawtexture);
-        texturedmodel.texture.setHasTransparency(0);
-        texturedmodel.texture.setUseFakeLighting(0);
-        Texture texture = texturedmodel.texture;
-        texture.shineDamper = 10;
-        texture.reflectivity = 1;
-        entities.push_back(Entity(texturedmodel, 1, glm::vec3(0, 0, 0), 0, 0, 0, 1.0));
-    }
-
     Terrain terrain1(1, 1, loader, texturePack, blendMap, "../texture/heightmap.png");
     
     //地面随即加草
@@ -129,13 +112,9 @@ int main()
         }
     }
 
-    Light light = Light(glm::vec3(1000,1000,-1000), glm::vec3(1.0,1.0,1.0), glm::vec3(1,0,0), glm::vec3(0,0,0), 10000.0);
+    Light light = Light(glm::vec3(1000,1000,-1000), glm::vec3(1.0,1.0,1.0), glm::vec3(1.8,0,0), glm::vec3(1,0,0), 10000.0);
     vector<Light> lights;
     lights.push_back(light);
-    // lights.push_back(Light(glm::vec3(185,10,-293), glm::vec3(2,0,0), glm::vec3(1, 0.01, 0.002)));
-    // lights.push_back(Light(glm::vec3(200,10,200), glm::vec3(0,2,2), glm::vec3(1, 0.01, 0.002)));
-    // lights.push_back(Light(glm::vec3(293,7,-305), glm::vec3(2,2,0), glm::vec3(1, 0.01, 0.002)));
-
     
     // Terrain terrain2(1, 0, loader, texturePack, blendMap, "texture/heightmap.png");
 
