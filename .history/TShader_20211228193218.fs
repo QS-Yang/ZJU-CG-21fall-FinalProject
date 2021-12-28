@@ -36,25 +36,22 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // get depth of current fragment from light's perspective
     float currentDepth = shadowCoords.z;
     // check whether current frag pos is in shadow
+	//float bias = max(0.05 * (1.0 - dot(surNormal, lightDirection[0])), 0.005);
     float bias = 0.001;
 	//float shadow = currentDepth - bias > closestDepth  ? 0.7 : 1.0; 
-
+    
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
 	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
 	for(int x = -1; x <= 1; ++x)
 	{
 		for(int y = -1; y <= 1; ++y)
 		{
-			float pcfDepth = texture(shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r; 
-			shadow += currentDepth - bias > pcfDepth ? 0.6 : 0.0;        
+			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
 		}    
 	}
 	shadow /= 9.0;
-
-	// keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-	if(shadowCoords.z > 1.0)
-        shadow = 0.0;
-
     return shadow;
 }
 
@@ -95,11 +92,10 @@ void main()
 			totalSpec += (dampedFactor * reflectivity *lightColor[i])/attFactor;
 		}
 	}
-	float lightFactor = 1.0 - ShadowCalculation(shadowCoords);
-	lightFactor = min(lightFactor, 0.75);
+	float lightFactor = ShadowCalculation(shadowCoords);
 	totalDiff = max(totalDiff, 0.2) * lightFactor;
 
-	FragColor = vec4(totalDiff, 1.0) * totalColor + vec4(totalSpec, 1.0);
-	FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);
+	 FragColor = vec4(totalDiff, 1.0) * totalColor + vec4(totalSpec, 1.0);
+	 FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);
 	// FragColor = texture(textureSampler, pTexCoord);
 }

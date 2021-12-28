@@ -25,7 +25,7 @@ uniform vec3 skyColor;
 uniform vec3 lightDirection[4];
 uniform float lightCutoff[4];
 
-float ShadowCalculation(vec4 fragPosLightSpace)
+float ShadowCalculation(vec4 fragPosLightSpace, vec3 lightDir)
 {
     // perform perspective divide
     vec3 shadowCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -38,6 +38,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // check whether current frag pos is in shadow
     float bias = 0.001;
 	//float shadow = currentDepth - bias > closestDepth  ? 0.7 : 1.0; 
+	vec3 normal = normalize(surNormal);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 
 	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -95,7 +97,7 @@ void main()
 			totalSpec += (dampedFactor * reflectivity *lightColor[i])/attFactor;
 		}
 	}
-	float lightFactor = 1.0 - ShadowCalculation(shadowCoords);
+	float lightFactor = 1.0 - ShadowCalculation(shadowCoords, lightDir);
 	lightFactor = min(lightFactor, 0.75);
 	totalDiff = max(totalDiff, 0.2) * lightFactor;
 

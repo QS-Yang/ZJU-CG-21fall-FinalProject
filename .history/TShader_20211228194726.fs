@@ -96,7 +96,7 @@ void main()
 		}
 	}
 	float lightFactor = 1.0 - ShadowCalculation(shadowCoords);
-	lightFactor = min(lightFactor, 0.75);
+	reduce(lightFactor, 0.75);
 	totalDiff = max(totalDiff, 0.2) * lightFactor;
 
 	FragColor = vec4(totalDiff, 1.0) * totalColor + vec4(totalSpec, 1.0);

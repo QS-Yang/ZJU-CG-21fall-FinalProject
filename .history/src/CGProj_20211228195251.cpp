@@ -113,14 +113,14 @@ int main()
 
     vector<glm::vec3> treePos;
 
-    for(int i = 0; i < 1600; i++){
+    for(int i = 0; i < 800; i++){
         if(i % 2 == 0){
             float x = random(0, 800);
             float z = random(0, 800);
             float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.3f));
+            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.1f));
         }
-        if(i % 3 == 0){
+        if(i % 5 == 0){
             float x = random(0, 800);
             float z = random(0, 800);
             float y = terrain1.getHeightOfTerrain(x, z);

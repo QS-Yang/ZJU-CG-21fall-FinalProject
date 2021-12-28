@@ -118,7 +118,7 @@ int main()
             float x = random(0, 800);
             float z = random(0, 800);
             float y = terrain1.getHeightOfTerrain(x, z);
-            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.3f));
+            entities.push_back(Entity(fern, random(1, 4), glm::vec3(x, y, z), 0, 0, 0, 0.1f));
         }
         if(i % 3 == 0){
             float x = random(0, 800);

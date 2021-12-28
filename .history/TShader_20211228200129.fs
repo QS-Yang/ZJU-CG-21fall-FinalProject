@@ -38,6 +38,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // check whether current frag pos is in shadow
     float bias = 0.001;
 	//float shadow = currentDepth - bias > closestDepth  ? 0.7 : 1.0; 
+	vec3 normal = normalize(surNormal);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDirection[0])), 0.005);
 
 	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);

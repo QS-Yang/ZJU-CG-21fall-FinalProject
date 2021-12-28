@@ -115,7 +115,7 @@ public:
 
         light->pos.x = position.x + 4*sin(radians(this->ry));
         light->pos.z = position.z + 4*cos(radians(this->ry));
-        light->pos.y = position.y - 4*sin(radians(this->rx)) + 0.5;
+        light->pos.y = position.y - 4*sin(radians(this->rx));
         light->direction = vec3(sin(radians(this->ry)), -sin(radians(this->rx)),cos(radians(this->ry)));
         // cout<<position.y <<" "<< light->pos.y<<endl;
         // rz = angle;
