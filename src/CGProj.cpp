@@ -132,7 +132,7 @@ int main()
     Ptexture.reflectivity = 1;
     Player player = Player(Ptexturedmodel, 1, glm::vec3(400, 0, 400), 0, 0, 0, 1.5);
     player.addWindow(window);
-    Light carLight = Light(glm::vec3(400, 0, 400), glm::vec3(1,1,1), glm::vec3(1, 0.1, 0.02), glm::vec3(1,0,0), -0.9);
+    Light carLight = Light(glm::vec3(400, 0, 400), glm::vec3(1,1,1), glm::vec3(1, 0.1, 0.02), glm::vec3(1,0,0), -1000.0);
     player.setLight(&carLight);
     player.setCollideObject(treePos);
     Camera camera= Camera(window, &player);

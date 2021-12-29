@@ -26,6 +26,8 @@ private:
 
     float slope=0;
 
+    bool space_state = false;
+
     // void jump() {
     //     this->upwardsSpeed = JUMP_POWER;
     // }
@@ -46,6 +48,14 @@ private:
         }else{
             this->currentTurnSpeed = 0;
         }
+
+        if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
+            if(space_state == false){
+                if(light->cutOff>-10) light->cutOff = -1000;
+                else light->cutOff = -0.9;
+                space_state = true;
+            }
+        } else space_state = false;
 
         // if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
         //     jump();
@@ -111,7 +121,7 @@ public:
         float angle = atan(slope)*360/(2*Pi);
         //cout<<angle<<endl;
         rx = -angle*cos(ry*2*Pi/360.0);
-        rz = angle*sin(ry*2*Pi/360.0)/2.0;
+        rz = angle*sin(ry*2*Pi/360.0)/1.0;
 
         light->pos.x = position.x + 4*sin(radians(this->ry));
         light->pos.z = position.z + 4*cos(radians(this->ry));
