@@ -13,7 +13,7 @@ using namespace glm;
 
 class Camera{
 public:
-    float distanceFromPlayer = 20;
+    float distanceFromPlayer = 40;
     float angleAroundPlayer = 0;
 
     vec3 position = vec3(0,0,0);
@@ -40,41 +40,19 @@ public:
     }
 
     void move(Terrain terrain){
-        // if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-        //     position.z-=Step;
-        // }
-        // if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-        //     position.z+=Step;
-        // }
-        // if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-        //     position.x-=Step;
-        // }
-        // if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-        //     position.x+=Step;
-        // }
         flushmouse();
-        // calculateZoom();
         calculatePitch(terrain);
         calculateAngleAroundPlayer();
-        float horizontalDistance = calculateHorizontalDistance();
-        float verticalDistance = calculateVerticalDistance();
+        float horizontalDistance = (float) (distanceFromPlayer * cos(pitch*2*Pi/360.0));
+        float verticalDistance = (float) (distanceFromPlayer * sin(pitch*2*Pi/360.0));
         calculateCameraPosition(horizontalDistance, verticalDistance);
         yaw = 180 - (player->ry + angleAroundPlayer);
     }
-
-    // void calculateZoom(){
-    //     float zoomLevel = glScroll * 0.01;
-    //     distanceFromPlayer -= zoomLevel;
-    // }
 
     void calculatePitch(Terrain terrain){
         if(glfwGetMouseButton(window, 0)==GLFW_PRESS){
             float pitchChange = yoffset * 0.1;
             pitch -= pitchChange;
-            // float terrainHeight = terrain.getHeightOfTerrain(position.x, position.z); 
-            // if(terrainHeight+1<player->position.y+distanceFromPlayer * sin(pitch*2*Pi/360.0)&&terrainHeight<position.y){
-            //     pitch -= pitchChange;
-            // }
         }
     }
 
@@ -83,14 +61,6 @@ public:
             float angleChange = xoffset * 0.3;
             angleAroundPlayer -= angleChange;
         }
-    }
-
-    float calculateHorizontalDistance(){
-        return (float) (distanceFromPlayer * cos(pitch*2*Pi/360.0));
-    }
-
-    float calculateVerticalDistance(){
-        return (float) (distanceFromPlayer * sin(pitch*2*Pi/360.0));
     }
 
     void calculateCameraPosition(float hDistance, float vDistance){

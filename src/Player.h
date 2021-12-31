@@ -22,9 +22,13 @@ private:
     bool isInAir = false;
 
     vector<glm::vec3> objectPos;
-    float collideSize = 2.5;
+    float xSize1 = 8;
+    float xSize2 = 6;
+    float zSize = 1;
+    float collideSize = 3;
 
-    float slope=0;
+    float Xslope=0;
+    float Zslope=0;
 
     bool space_state = false;
 
@@ -83,8 +87,11 @@ public:
         this->objectPos = objectPos;
     }
 
-    float dis(float x1, float z1, float x2, float z2){
-        return sqrt((x1-x2)*(x1-x2)+(z1-z2)*(z1-z2));
+    bool checkCollision(float x1, float z1, float x2, float z2){
+        // bool collisionX = x1 + xSize1 >= x2 - 1 && x2 + 1 >= x1 - xSize2;
+        // bool collisionZ = z1 + zSize >= z2 - 1 && z2 + 1 >= z1 - zSize;
+        // return collisionX && collisionZ;
+        return sqrt((x1-x2)*(x1-x2)+(z1-z2)*(z1-z2))<collideSize;
     }
 
     void move(float delta, Terrain terrain) {
@@ -95,8 +102,9 @@ public:
         float dz = distance * cos(radians(this->ry));
         bool collision=false;
         for(int i=0; i<objectPos.size(); i++){
-            if(dis(position.x+dx, position.z+dz, objectPos[i].x, objectPos[i].z)<collideSize){
+            if(checkCollision(position.x+dx, position.z+dz, objectPos[i].x, objectPos[i].z)){
                 collision=true;
+                break;
             }
         }
         if(!collision) Up(dx, 0, dz); 
@@ -112,16 +120,23 @@ public:
         float terrainHeight = terrain.getHeightOfTerrain(position.x, position.z); 
         this->position.y = terrainHeight;
 
-        if(currentSpeed) {
-            slope =(terrainHeight-terrain.getHeightOfTerrain(position.x-dx*10, position.z-dz*10))/(sqrt(dx*dx*100+dz*dz*100));
-            //cout<<dx<<" "<<dz<<endl;
-            if(currentSpeed<0) slope = -slope;
-            //cout<<slope<<endl;
-        }
-        float angle = atan(slope)*360/(2*Pi);
+        // if(currentSpeed) {
+        //     Xslope =(terrainHeight-terrain.getHeightOfTerrain(position.x-dx*2, position.z-dz*2))/(sqrt(dx*dx*4+dz*dz*4));
+        //     //cout<<dx<<" "<<dz<<endl;
+        //     if(currentSpeed<0) Xslope = -Xslope;
+        //     //cout<<slope<<endl;
+        // }
+        Xslope =(terrainHeight-terrain.getHeightOfTerrain(position.x-sin(radians(this->ry))*10, position.z-cos(radians(this->ry))*10))/
+                (sqrt(sin(radians(this->ry))*sin(radians(this->ry))*100+cos(radians(this->ry))*cos(radians(this->ry))*100));
+        Zslope =(terrainHeight-terrain.getHeightOfTerrain(position.x-sin(radians(this->ry+270))*5, position.z-cos(radians(this->ry+270))*5))/
+                (sqrt(sin(radians(this->ry+270))*sin(radians(this->ry+270))*25+cos(radians(this->ry+270))*cos(radians(this->ry+270))*25));
+
+        float Xangle = atan(Xslope)*360/(2*Pi);
+        float Zangle = atan(Zslope)*360/(2*Pi);
+
         //cout<<angle<<endl;
-        rx = -angle*cos(ry*2*Pi/360.0);
-        rz = angle*sin(ry*2*Pi/360.0)/1.0;
+        rx = -Xangle*cos(ry*2*Pi/360.0);
+        rz = -Zangle*fabs(sin(ry*2*Pi/360.0));
 
         light->pos.x = position.x + 4*sin(radians(this->ry));
         light->pos.z = position.z + 4*cos(radians(this->ry));

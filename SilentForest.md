@@ -42,9 +42,121 @@
 
 ### Obj导入与材质贴图导入
 
+#### Obj导入
+
+分别导入v、vt、vn、f等相关数据，存入对应的数组中，经过处理之后送入函数生成模型。
+
+```c++
+ModelData loadObj(const char* fileName) {
+    ifstream file(fileName);
+    string line;
+    std::vector<std::vector<std::string> > f_index;
+    while (getline(file, line)) {
+        if (line.substr(0,2) == "v ") {
+            glm::vec3 vertex;
+            istringstream s(line.substr(2));
+            s >> vertex.x; 
+            s >> vertex.y; 
+            s >> vertex.z;
+            Vertex v = Vertex(vertices.size(), vertex);
+            vertices.push_back(v);
+        } 
+        else if(line.substr(0,3) == "vt ") {
+            glm::vec2 texture;
+            istringstream s(line.substr(2));
+            s >> texture.x; 
+            s >> texture.y;
+            textures.push_back(texture);
+        }
+        else if(line.substr(0,3) == "vn ") {
+            glm::vec3 normal;
+            istringstream s(line.substr(2));
+            s >> normal.x; 
+            s >> normal.y; 
+            s >> normal.z;
+            normals.push_back(normal);
+        }
+        else if(line.substr(0,2) == "f ") {
+            vector<string> words = parser(line, " ");
+            vector<string> v1 = parser(words[1],"/");
+            vector<string> v2 = parser(words[2],"/");
+            vector<string> v3 = parser(words[3],"/");
+            f_index.push_back(v1);
+            f_index.push_back(v2);
+            f_index.push_back(v3);
+        }    
+    } 
+    for(int i = 0; i < f_index.size(); i++) {
+        processVertex(f_index[i]);
+    }
+    removeVertices();
+    float *verticesArray = new float[vertices.size()*3];
+    float *texturesArray = new float[vertices.size()*2];
+    float *normalsArray = new float[vertices.size()*3];
+    float furthest = convertDataToArrays(verticesArray, texturesArray, normalsArray);
+    int* indicesArray = convertIndicesToArray();
+    ModelData data = ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest, vertices.size(), indices.size());
+    return data;
+}
+```
+
+#### 材质贴图导入
+
+使用stb_image库导入贴图。
+
+```c++
+unsigned int loadCubeMap(string faces[], int length)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+    int width, height, nrChannels;
+    for (unsigned int i = 0; i < length; i++)
+    {
+        unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 
+                         0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+                        );
+            stbi_image_free(data);
+        }
+        else
+        {
+            std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+            stbi_image_free(data);
+        }
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    return textureID;
+}
+```
+
+
+
 
 
 ### 相机类与第三人称视角
+
+相机始终对准小车，并跟随小车进行移动。使用鼠标可以调整视角，使用WASD控制小车和相机的移动，使用滚轮进行缩放。
+
+```c++
+void move(Terrain terrain){
+    flushmouse();
+    calculatePitch(terrain);
+    calculateAngleAroundPlayer();
+    float horizontalDistance = (float) (distanceFromPlayer * cos(pitch*2*Pi/360.0));
+    float verticalDistance = (float) (distanceFromPlayer * sin(pitch*2*Pi/360.0));
+    calculateCameraPosition(horizontalDistance, verticalDistance);
+    yaw = 180 - (player->ry + angleAroundPlayer);
+}
+```
 
 
 
@@ -70,8 +182,6 @@ vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bText
 
 ### 地势构建
 
-
-
 #### 高度变化
 
 地形的基本贴图是一张平面，为了实现地形的起伏变化，我们采用了HeightMap设置地形高度。HeightMap是一张利用噪声生成的贴图，我们将其导入后根据纹理坐标读取对应位置的高度值，设置地形高度，从而将二维的地形拓展为三维地势。
@@ -93,9 +203,26 @@ for (int i = 0; i < VERTEX_COUNT; i++) {
 
 ### 光源设计
 
+#### 点光源
 
+在平行光源的基础上，设置光源位置与衰减系数。光照方向通过点坐标减光源坐标计算得出，光强随着距离衰减。
 
+```glsl
+float distance = length(toLightVector[i])/5;
+float attFactor = attenuation[i].x+(attenuation[i].y*distance)+(attenuation[i].z*distance*distance);
+```
 
+#### 聚光光源
+
+在点光源的基础上，加入打光方向和光照的界限。若光源指向物体的向量与光的方向的夹角超过限制，则不会显示这道光。
+
+```glsl
+float theta = dot(lightDir, normalize(-lightDirection[i]));
+if(theta < lightCutoff[i]){
+	totalDiff += (bright * lightColor[i])/attFactor;
+	totalSpec += (dampedFactor * reflectivity *lightColor[i])/attFactor;
+}
+```
 
 #### 多光源
 
@@ -185,9 +312,69 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 
 
+### 碰撞检测
+
+#### 与地面碰撞检测
+
+与地面的碰撞检测主要实现两点：一是保持小车高度与地面高度一致，二是小车的底面与地面平齐。
+
+第一点的实现较为简单，只需要让小车的y坐标与地面高度始终相等即可。
+
+对于第二点，我们利用附近地面的高度，可以大致计算出小车横向与纵向上的地面坡度，并根据坡度设置小车绕x轴和z轴旋转的角度，就可以大致保持小车与地面平齐。
+
+```c++
+Xslope =(terrainHeight-terrain.getHeightOfTerrain(position.x-sin(radians(this->ry))*10, 
+		position.z-	cos(radians(this->ry))*10))/(sqrt(sin(radians(this->ry))*
+        sin(radians(this->ry))*100+cos(radians(this->ry))*cos(radians(this->ry))*100));
+Zslope =(terrainHeight-terrain.getHeightOfTerrain(position.x-sin(radians(this->ry+270))*5, 
+        position.z-cos(radians(this->ry+270))*5))/(sqrt(sin(radians(this->ry+270))*
+    	sin(radians(this->ry+270))*25+cos(radians(this->ry+270))*cos(radians(this->ry+270))*25));
+
+float Xangle = atan(Xslope)*360/(2*Pi);
+float Zangle = atan(Zslope)*360/(2*Pi);
+
+rx = -Xangle*cos(ry*2*Pi/360.0);
+rz = -Zangle*fabs(sin(ry*2*Pi/360.0));
+```
+
+#### 与树的碰撞检测
+
+实现与树的碰撞检测时，我们尝试了质点检测与AABB检测两种方法。质点检测即为直接判断树的中心与小车中心的距离，若小于一个阈值，则判断两者相撞。AABB检测则是将两者都视为一个长方体的盒子，计算两个盒子是否相交。
+
+质点：
+
+```c++
+bool checkCollision(float x1, float z1, float x2, float z2){
+    return sqrt((x1-x2)*(x1-x2)+(z1-z2)*(z1-z2))<collideSize;
+}
+```
+
+AABB:
+
+```c++
+bool checkCollision(float x1, float z1, float x2, float z2){
+    bool collisionX = x1 + xSize1 >= x2 - 1 && x2 + 1 >= x1 - xSize2;
+    bool collisionZ = z1 + zSize >= z2 - 1 && z2 + 1 >= z1 - zSize;
+    return collisionX && collisionZ;
+}
+```
+
+由于我们的小车的横轴与纵轴并不一直与x轴和z轴保持一致，AABB碰撞检测的最终效果反而不如质点检测，因此我们最终使用质点检测的方法进行碰撞检测。
+
+
+
 ### 雾效与SkyBox
 
 #### 雾效的实现
+
+雾的效果由物体本身颜色与背景色混合实现，使用density代表雾的浓度，gradient代表雾随距离增长的快慢。以density、gradient、distance三者为参数构建函数，计算出对应的能见度visibility。再以visibility为参数将背景色与物体本身颜色混合。
+
+```glsl
+visibility = exp(-pow((distance*density),gradient));
+visibility = clamp(visibility, 0.0, 1.0);
+
+FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);
+```
 
 
 
@@ -217,7 +404,7 @@ void main(void) {
 ```
 
 ```glsl
-#version 400 core
+-#version 400 core
 
 layout (location = 0) in vec3 position;
 out vec3 textureCoord;
@@ -250,7 +437,7 @@ void main()
 ## 小组成员
 
 * 曾帅 3190105729
-* 王异鸣
+* 王异鸣 3190102780
 * 杨淇森 3190105500
 
 
@@ -269,3 +456,4 @@ void main()
 ### 项目资源来源
 
 * http://free3d.com/
+* 谷歌图片

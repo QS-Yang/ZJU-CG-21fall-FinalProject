@@ -33,7 +33,7 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 //Camera初始位置
-double fov = 20.0;
+double fov = 40.0;
 
 int main()
 {
