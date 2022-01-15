@@ -69,16 +69,12 @@ public:
         for(int i = 0; i < f_index.size(); i++) {
             processVertex(f_index[i]);
         }
-        // processVertex(v1);
-        // processVertex(v2);
-        // processVertex(v3);
         removeVertices();
         float *verticesArray = new float[vertices.size()*3];
         float *texturesArray = new float[vertices.size()*2];
         float *normalsArray = new float[vertices.size()*3];
         float furthest = convertDataToArrays(verticesArray, texturesArray, normalsArray);
         int* indicesArray = convertIndicesToArray();
-        // for(int i=0; i<vertices.size()*2; i++) cout<<texturesArray[i]<<endl;
         ModelData data = ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest, vertices.size(), indices.size());
         return data;
     }

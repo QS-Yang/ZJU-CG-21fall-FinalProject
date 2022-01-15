@@ -17,7 +17,7 @@ public:
     float angleAroundPlayer = 0;
 
     vec3 position = vec3(0,0,0);
-    float pitch = 10;
+    float pitch = 30;
     float yaw;
     float roll;
 

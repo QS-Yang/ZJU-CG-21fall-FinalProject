@@ -25,9 +25,9 @@
 
 ### 游戏画面
 
-![image-20211229195603637](SilentForest.assets/image-20211229195603637.png)
+<img src="SilentForest.assets/image-20211229195603637.png" alt="image-20211229195603637" style="zoom:150%;" />
 
-![image-20211229195615646](SilentForest.assets/image-20211229195615646.png)
+<img src="SilentForest.assets/image-20211229195615646.png" alt="image-20211229195615646" style="zoom:150%;" />
 
 ### 游戏操作
 
@@ -35,12 +35,13 @@
 * AD控制车头转动
 * 鼠标左键控制视角
 * 滚轮实现缩放
+* 空格控制开关灯
 
 
 
 ## 实现重点
 
-### Obj导入与材质贴图导入
+### Obj导入与贴图导入
 
 #### Obj导入
 
@@ -100,7 +101,7 @@ ModelData loadObj(const char* fileName) {
 }
 ```
 
-#### 材质贴图导入
+#### 贴图导入
 
 使用stb_image库导入贴图。
 
@@ -138,7 +139,25 @@ unsigned int loadCubeMap(string faces[], int length)
 }
 ```
 
+### 材质编辑
 
+通过修改导入模型与贴图的各项参数编辑和显示物体的材质。
+
+```c++
+class Texture {
+public:
+	int textureID;
+	float shineDamper = 1;
+    // 反射率
+	float reflectivity = 0;
+	// 透明度选择开关
+	int hasTransparency = 0;
+    // 自发光
+	int useFakeLighting = 0;
+};
+```
+
+![image-20220102125815157](/home/bcct/.config/Typora/typora-user-images/image-20220102125815157.png)
 
 
 
@@ -178,7 +197,9 @@ vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bText
 
 可以看到，最终的纹理颜色将会是背景与三张贴图的混合。
 
-![image-20211229195852608](SilentForest.assets/image-20211229195852608.png)
+<img src="SilentForest.assets/image-20211229195852608.png" alt="image-20211229195852608" style="zoom:150%;" />
+
+
 
 ### 地势构建
 
@@ -197,11 +218,13 @@ for (int i = 0; i < VERTEX_COUNT; i++) {
         ...
 ```
 
-<img src="SilentForest.assets\2021-12-30 111927.png" alt="2021-12-30 111927" style="zoom:67%;" />
+![image-20220102103312262](/home/bcct/.config/Typora/typora-user-images/image-20220102103312262.png)
 
 
 
 ### 光源设计
+
+除了最基本的Phong光照模型之外，我们还实现了点光源、聚光光源与多光源，并且光源的强度、位置和照射方向均可改变
 
 #### 点光源
 
@@ -237,6 +260,8 @@ for(int i=0; i<4; i++){
 }
 ...
 ```
+
+![image-20220102125604501](/home/bcct/.config/Typora/typora-user-images/image-20220102125604501.png)
 
 
 
@@ -310,6 +335,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 }
 ```
 
+![image-20220102125630996](/home/bcct/.config/Typora/typora-user-images/image-20220102125630996.png)
+
 
 
 ### 碰撞检测
@@ -361,6 +388,8 @@ bool checkCollision(float x1, float z1, float x2, float z2){
 
 由于我们的小车的横轴与纵轴并不一直与x轴和z轴保持一致，AABB碰撞检测的最终效果反而不如质点检测，因此我们最终使用质点检测的方法进行碰撞检测。
 
+![image-20220102125658086](/home/bcct/.config/Typora/typora-user-images/image-20220102125658086.png)
+
 
 
 ### 雾效与SkyBox
@@ -375,8 +404,6 @@ visibility = clamp(visibility, 0.0, 1.0);
 
 FragColor = mix(vec4(skyColor,1.0), FragColor, visibility);
 ```
-
-
 
 #### SkyBox的实现
 
@@ -422,15 +449,29 @@ void main()
 
 在这里我组与普通天空盒稍有区别，为了使得天空盒与雾效比较配合，我组在绘制颜色时将天空颜色与雾的颜色同时考虑：越是靠近地面的物体，雾越浓（也就是越能表现出雾的颜色），往高处，才会慢慢凸物体，最上层（超过某个高度）则是物体本身的颜色或者天空盒子的颜色。原理如下图所示：(图片来源：https://codeantenna.com/a/8JOrZV9ExO)
 
-![img](SilentForest.assets/SouthEast.png)
+<img src="SilentForest.assets/SouthEast.png" alt="img" style="zoom:67%;" />
 
 最终我们可以得到一个比较好的效果
 
-![image-20211229202800867](SilentForest.assets/image-20211229202800867.png)
+<img src="SilentForest.assets/image-20211229202800867.png" alt="image-20211229202800867" style="zoom:150%;" />
 
 
 
 ## 运行方法与环境
+
+### 运行环境
+
+* Unbuntu 20.04
+* GLFW and GLM and GLAD
+
+### 运行方法
+
+在src目录下执行./run.sh，其中的内容如下：
+
+```shell
+g++ glad.c stb_image.cpp CGProj.cpp -o CGProj -lglfw3 -lGL -lX11 -lpthread -lXrandr -lXi -ldl
+./CGProj
+```
 
 
 

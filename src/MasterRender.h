@@ -29,7 +29,6 @@ public:
     unsigned int depthMap;
     
     ShaderProgram shader= ShaderProgram("../Shader.vs", "../Shader.fs");
-    //EntityRender renderer = EntityRender(shader);
     EntityRender renderer;
 
     TerrainRender terrainRender;
@@ -69,7 +68,6 @@ public:
         terrainShader.loadSkyColor(RED, GREEN, BLUE);
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
-        //terrainRender.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
         terrainRender.render(terrains, lightSpaceMatrix);
         terrainShader.Stop();
 
@@ -98,7 +96,6 @@ public:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE5);
         glBindTexture(GL_TEXTURE_2D, depthMap);
-        //glClear(GL_COLOR_BUFFER_BIT);
     }
 
     void createProjectMatrix() {
@@ -119,7 +116,6 @@ public:
     void renderShadowMap(Light sun) {
         glm::mat4 lightProjection, lightView;
         float near_plane = 1300.0f, far_plane = 2200.0f;
-        //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
         lightProjection = glm::ortho(-1300.0f, 0.0f, -250.0f, 250.0f, near_plane, far_plane);
         lightView = glm::lookAt(sun.pos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;

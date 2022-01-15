@@ -5,7 +5,6 @@
 #include "Model.h"
 #include "Loader.h"
 #include "Render.h"
-// #include "ObjLoader.h"
 #include "OBJFileLoader.h"
 #include "Texture.h"
 #include "TexturedModel.h"
@@ -33,7 +32,7 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 //Camera初始位置
-double fov = 40.0;
+double fov = 60.0;
 
 int main()
 {
@@ -115,8 +114,6 @@ int main()
     Light light = Light(glm::vec3(1000,1000,-1000), glm::vec3(1.0,1.0,1.0), glm::vec3(1.8,0,0), glm::vec3(1,0,0), 10000.0);
     vector<Light> lights;
     lights.push_back(light);
-    
-    // Terrain terrain2(1, 0, loader, texturePack, blendMap, "texture/heightmap.png");
 
     // Player try
     ObjLoader objloader2 = ObjLoader();
@@ -124,7 +121,6 @@ int main()
     Model Pmodel = loader.LoadToV(pdata.vertices, 3*pdata.numOfVertices, pdata.textureCoords, 2*pdata.numOfVertices, pdata.indices, pdata.numOfIndices, pdata.normals, 3*pdata.numOfVertices);
     Texture Prawtexture=Texture(loader.loadTexture("../texture/Car.png"));
     TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Prawtexture);
-    //TexturedModel Ptexturedmodel=TexturedModel(Pmodel, Texture()/*Prawtexture*/);
     Ptexturedmodel.texture.setHasTransparency(0);
     Ptexturedmodel.texture.setUseFakeLighting(0);
     Texture Ptexture = Ptexturedmodel.texture;
@@ -146,7 +142,6 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
-        // --------------------
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -154,14 +149,12 @@ int main()
         processInput(window);
         player.move(deltaTime, terrain1);
         lights[1]=*player.light;
-        // cout<<lights[0].cutOff<<endl;
         camera.distanceFromPlayer = fov;
         camera.move(terrain1);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         renderer.processEntity(player);
-        // renderer.processTerrain(terrain2);
         for(int i=0;i<entities.size(); i++){
             renderer.processEntity(entities[i]);
         }
@@ -170,17 +163,11 @@ int main()
         terrain1.bindShadowMap(renderer.depthMap);
         renderer.processEntity(player);
         renderer.processTerrain(terrain1);
-        // renderer.processTerrain(terrain2);
         for(int i=0;i<entities.size(); i++){
             renderer.processEntity(entities[i]);
         }
-        // lights[0].pos.x = player.position.x;
-        // lights[0].pos.z = player.position.z;
-        // lights[0].pos.y = 2;
-        // cout<<lights[1].pos.x<<" "<<lights[1].pos.z<<endl;
         renderer.render(lights,camera);
         
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -188,25 +175,19 @@ int main()
     renderer.Clear();
     loader.Clean();
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
     glfwTerminate();
     return 0;
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
