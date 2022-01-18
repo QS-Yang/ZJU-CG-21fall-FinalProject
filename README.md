@@ -2,7 +2,9 @@
 Final Project of ZJU Computer Graphic (by Wu Hongzhi)
 
 Relation libs: glfw3 + glad + glm
+
 based on C++
+
 You need to configuration the OpenGL environment by yourself.
 ##### For linux
 ```
